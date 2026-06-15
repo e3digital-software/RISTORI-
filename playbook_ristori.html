@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ristori · Playbook Comercial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,0,600;9..144,1,400;9..144,1,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#1d2024;
+  --bg-2:#23262b;
+  --bg-3:#2a2e33;
+  --panel:#262a2f;
+  --panel-2:#2e3338;
+  --line:#3a3f46;
+  --line-soft:#30353b;
+  --text:#e8e4dc;
+  --text-soft:#a7a399;
+  --muted:#6b6e73;
+  --champ:#c9b896;       /* champanhe - acento principal */
+  --champ-bright:#ddcca6;
+  --champ-deep:#a89878;
+  --champ-glow:rgba(201,184,150,.16);
+  --champ-dim:rgba(201,184,150,.07);
+  /* cores por canal */
+  --c-escrito:#7fa8c9;
+  --c-ligacao:#c9a87f;
+  --c-audio:#a9c97f;
+  --green:#7faf87;
+  --red:#c98f86;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -8%,rgba(201,184,150,.06),transparent 55%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+#scrollProg{position:fixed;top:0;left:0;height:2px;width:0;z-index:120;background:linear-gradient(90deg,var(--champ),var(--champ-bright));transition:width .1s linear}
+
+/* LOGO MARK (recreated from the uploaded logo) */
+.logo-mark{display:inline-grid;place-items:center;border-radius:50%;border:1.5px solid var(--champ-deep);position:relative;flex-shrink:0}
+.logo-mark .bars{display:flex;align-items:flex-end;gap:2.5px;height:42%}
+.logo-mark .bars i{display:block;width:2px;background:var(--text);border-radius:1px}
+.logo-mark .bars i:nth-child(1){height:100%}
+.logo-mark .bars i:nth-child(2){height:78%;background:var(--text-soft)}
+.logo-mark .bars i:nth-child(3){height:100%;width:1.4px;background:var(--champ);align-self:flex-start}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:80;background:rgba(29,32,36,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line-soft)}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:0 26px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:13px;cursor:pointer;user-select:none}
+.brand .logo-mark{width:38px;height:38px}
+.brand .logo-mark .bars{height:40%}
+.brand-name{font-family:'Fraunces',serif;font-weight:500;font-size:17px;letter-spacing:.02em;line-height:1.05}
+.brand-name small{display:block;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--champ);margin-top:3px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.kbd-btn{display:inline-flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--panel);color:var(--text-soft);cursor:pointer;padding:9px 14px;border:1px solid var(--line);border-radius:9px;transition:all .2s var(--ease)}
+.kbd-btn:hover{border-color:var(--champ);color:var(--text);background:var(--champ-dim)}
+.kbd-key{font-size:9.5px;color:var(--champ);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+
+.shell{position:relative;z-index:1}
+.view{display:none}
+.view.active{display:block}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== LOBBY ===== */
+.lobby{max-width:1100px;margin:0 auto;padding:80px 26px 60px}
+.lobby-head{text-align:center;margin-bottom:56px}
+.lobby-logo{width:96px;height:96px;margin:0 auto 28px}
+.lobby-logo .bars{height:40%;gap:5px}
+.lobby-logo .bars i{width:4px}
+.lobby-logo .bars i:nth-child(3){width:2.6px}
+.lobby-kicker{display:inline-flex;align-items:center;gap:11px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--champ);margin-bottom:22px}
+.lobby-kicker::before,.lobby-kicker::after{content:"";width:24px;height:1px;background:var(--champ-deep);opacity:.5}
+.lobby h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(38px,6vw,64px);line-height:1.04;letter-spacing:-.02em;margin-bottom:14px}
+.lobby h1 em{font-style:italic;color:var(--champ)}
+.lobby-sub{color:var(--text-soft);font-size:16.5px;max-width:54ch;margin:0 auto}
+
+.tese-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:24px;display:flex;align-items:center;gap:14px;justify-content:center}
+.tese-label::before,.tese-label::after{content:"";height:1px;width:60px;background:var(--line)}
+
+.tese-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.tese-grid{grid-template-columns:1fr}}
+.tese-card{background:linear-gradient(155deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:32px 30px;cursor:pointer;transition:all .35s var(--ease);position:relative;overflow:hidden}
+.tese-card::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(155deg,var(--champ-glow),transparent 60%);-webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s}
+.tese-card:hover{transform:translateY(-4px);border-color:var(--champ-deep);box-shadow:0 28px 60px -30px rgba(0,0,0,.6)}
+.tese-card:hover::before{opacity:1}
+.tese-card .tnum{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--champ);margin-bottom:18px}
+.tese-card .tname{font-family:'Fraunces',serif;font-weight:500;font-size:27px;line-height:1.1;letter-spacing:-.01em;margin-bottom:10px}
+.tese-card .tdesc{color:var(--text-soft);font-size:14px;margin-bottom:22px;min-height:60px}
+.tese-card .tmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tese-card .chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);background:var(--bg-3);border:1px solid var(--line);border-radius:6px;padding:4px 9px}
+.tese-card .tgo{display:flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--champ)}
+.tese-card .tgo .arr{transition:transform .3s var(--ease)}
+.tese-card:hover .tgo .arr{transform:translateX(5px)}
+
+.lobby-foot{margin-top:50px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== TRILHA (playbook view) ===== */
+.pb-wrap{max-width:1240px;margin:0 auto;padding:30px 26px 80px}
+.pb-grid{display:grid;grid-template-columns:268px 1fr;gap:46px;align-items:start}
+.pb-side{position:sticky;top:84px}
+.pb-back{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;margin-bottom:22px;transition:all .2s var(--ease)}
+.pb-back:hover{color:var(--champ);gap:11px}
+.pb-tese-badge{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:13px;margin-bottom:18px}
+.pb-tese-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--champ);box-shadow:0 0 10px var(--champ);flex-shrink:0}
+.pb-tese-badge .txt{font-family:'Fraunces',serif;font-weight:500;font-size:15px;line-height:1.15}
+.pb-tese-badge .txt small{display:block;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);margin-top:2px;font-weight:400}
+.pb-progress{height:3px;background:var(--line-soft);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.pb-progress-bar{height:100%;background:linear-gradient(90deg,var(--champ),var(--champ-bright));border-radius:3px;transition:width .5s var(--ease)}
+.pb-count{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--champ);text-align:right;margin-bottom:20px;letter-spacing:.05em}
+.pb-nav{list-style:none;display:flex;flex-direction:column;gap:2px}
+.pb-nav-item{display:flex;align-items:flex-start;gap:13px;padding:11px 14px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .22s var(--ease)}
+.pb-nav-item:hover{background:var(--panel);transform:translateX(3px)}
+.pb-nav-item.active{background:linear-gradient(135deg,var(--panel),var(--bg-2));border-color:var(--line);box-shadow:inset 2px 0 0 var(--champ)}
+.pb-nav-num{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);flex-shrink:0;padding-top:1px}
+.pb-nav-item.active .pb-nav-num{color:var(--champ);font-weight:500}
+.pb-nav-text{font-size:13.5px;color:var(--text-soft);line-height:1.35}
+.pb-nav-item.active .pb-nav-text{color:var(--text);font-weight:500}
+.pb-nav-star{margin-left:auto;color:var(--champ);font-size:10px;flex-shrink:0}
+
+.pb-dl{margin-top:20px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--champ);color:#22251f;cursor:pointer;padding:13px;border:none;border-radius:11px;transition:all .2s var(--ease);font-weight:500}
+.pb-dl:hover{background:var(--champ-bright);transform:translateY(-1px)}
+
+.pb-content{min-width:0}
+.pb-fade{animation:pbfade .5s var(--ease)}
+@keyframes pbfade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.pb-banner{background:linear-gradient(140deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:20px;padding:34px 38px;margin-bottom:24px;position:relative;overflow:hidden}
+.pb-banner::after{content:attr(data-num);position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:150px;color:var(--line);opacity:.4;line-height:1;pointer-events:none}
+.pb-part-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);padding:6px 13px;border-radius:7px;background:var(--champ-dim);border:1px solid rgba(201,184,150,.2);margin-bottom:16px}
+.pb-banner h1{font-family:'Fraunces',serif;font-weight:500;font-size:40px;letter-spacing:-.02em;line-height:1.05;margin-bottom:14px;position:relative;z-index:1}
+.pb-intro{color:var(--text-soft);font-size:15.5px;max-width:62ch;position:relative;z-index:1}
+
+.pb-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px 36px;margin-bottom:22px}
+.sub-h{font-family:'Fraunces',serif;font-weight:500;font-size:24px;letter-spacing:-.01em;margin:32px 0 14px;display:flex;align-items:center;gap:12px}
+.sub-h::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--champ);box-shadow:0 0 10px var(--champ);flex-shrink:0}
+.sub-h:first-child{margin-top:0}
+.text-p{color:var(--text-soft);font-size:15px;margin-bottom:14px;max-width:72ch}
+.text-p b{color:var(--text);font-weight:600}
+.overline{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--champ);margin:22px 0 12px;display:flex;align-items:center;gap:10px}
+.overline::before{content:"—"}
+.blist{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.blist li{display:flex;gap:12px;font-size:14.5px;color:var(--text)}
+.blist li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--champ);margin-top:9px;flex-shrink:0}
+
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:760px){.dual{grid-template-columns:1fr}}
+.dcard{padding:22px 24px;border:1px solid;border-radius:16px}
+.dcard.ok{background:rgba(127,175,135,.06);border-color:rgba(127,175,135,.22)}
+.dcard.no{background:rgba(201,143,134,.06);border-color:rgba(201,143,134,.22)}
+.dcard-h{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:13px;font-weight:500}
+.dcard.ok .dcard-h{color:var(--green)}
+.dcard.no .dcard-h{color:var(--red)}
+.dcard ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.dcard li{display:flex;gap:10px;font-size:13.5px;color:var(--text);line-height:1.45}
+.dcard.ok li::before{content:"+";color:var(--green);font-weight:700;flex-shrink:0}
+.dcard.no li::before{content:"\00d7";color:var(--red);font-weight:700;flex-shrink:0}
+
+.callout{background:linear-gradient(135deg,var(--champ-dim),transparent 70%);border:1px solid rgba(201,184,150,.25);border-left:3px solid var(--champ);border-radius:13px;padding:18px 22px;margin:18px 0}
+.callout-l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);margin-bottom:8px;font-weight:500}
+.callout p{font-size:15px;color:var(--text)}
+.callout p b{color:var(--champ)}
+
+/* SCRIPT */
+.script{background:var(--bg-3);border:1px solid var(--line);border-left:3px solid var(--champ);border-radius:13px;margin:14px 0;overflow:hidden}
+.script-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px 9px}
+.script-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--champ);font-weight:500}
+.script-actions{display:flex;gap:8px}
+.btn-sm{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;background:transparent;color:var(--text-soft);border:1px solid var(--line);border-radius:7px;padding:6px 11px;cursor:pointer;transition:all .2s var(--ease)}
+.btn-sm:hover{border-color:var(--champ);color:var(--text);background:var(--champ-dim)}
+.btn-sm.done{background:var(--green);color:#1a1d18;border-color:var(--green)}
+.script-text{padding:0 18px 16px;white-space:pre-wrap;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.72;color:var(--text)}
+.script-why{padding:11px 18px 14px;font-size:13px;font-style:italic;color:var(--text-soft);border-top:1px dashed var(--line);background:var(--champ-dim)}
+.script-why b{color:var(--champ);font-style:normal;font-weight:600}
+.bubbles{display:none;flex-direction:column;gap:10px;padding:4px 18px 16px}
+.bubbles.show{display:flex}
+.bubble{background:var(--champ-dim);border:1px solid rgba(201,184,150,.2);border-radius:4px 14px 14px 14px;padding:10px 14px 22px;position:relative;max-width:88%;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;color:var(--text);white-space:pre-wrap}
+.bubble .bcopy{position:absolute;right:8px;bottom:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;background:rgba(0,0,0,.3);border:none;cursor:pointer;padding:4px 9px;border-radius:6px;color:var(--champ)}
+.bubble .bcopy:hover{background:var(--champ);color:#22251f}
+.bubbles-hint{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--bg-3);border-radius:13px;overflow:hidden;border:1px solid var(--line)}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+th{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft);font-weight:500;background:var(--panel-2)}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500;color:var(--text)}
+tbody tr:hover{background:var(--panel)}
+.s-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:7px;margin-top:18px;font-weight:500}
+.s-tag-ok{background:rgba(127,175,135,.14);color:var(--green)}
+.s-tag-amber{background:rgba(201,168,127,.16);color:var(--c-ligacao)}
+.s-tag-red{background:rgba(201,143,134,.14);color:var(--red)}
+
+/* ===== CADÊNCIA / TIMELINE ===== */
+.cad-switch{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.cad-tab{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:11px 16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text-soft);cursor:pointer;transition:all .2s var(--ease)}
+.cad-tab:hover{border-color:var(--champ-deep);color:var(--text)}
+.cad-tab.active{background:var(--champ);color:#22251f;border-color:var(--champ);font-weight:500}
+.cad-legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:24px;padding:14px 18px;background:var(--bg-3);border:1px solid var(--line);border-radius:12px}
+.cad-leg{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
+.cad-leg .sw{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+
+.timeline{position:relative;padding-left:38px}
+.timeline::before{content:"";position:absolute;left:13px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--champ-deep),var(--line))}
+.tl-item{position:relative;margin-bottom:18px}
+.tl-item::before{content:"";position:absolute;left:-31px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--champ);box-shadow:0 0 0 4px var(--bg)}
+.tl-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:all .25s var(--ease)}
+.tl-card:hover{border-color:var(--champ-deep)}
+.tl-top{display:flex;align-items:center;gap:14px;padding:16px 20px;flex-wrap:wrap}
+.tl-day{font-family:'Fraunces',serif;font-weight:600;font-size:22px;color:var(--champ);min-width:54px}
+.tl-info{flex:1;min-width:180px}
+.tl-toque{font-weight:600;font-size:15px;color:var(--text)}
+.tl-obj{font-size:13px;color:var(--text-soft);margin-top:2px}
+.tl-canal{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:8px;font-weight:500;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.tl-canal::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.tl-canal.escrito{color:var(--c-escrito);background:rgba(127,168,201,.12);border:1px solid rgba(127,168,201,.25)}
+.tl-canal.ligacao{color:var(--c-ligacao);background:rgba(201,168,127,.12);border:1px solid rgba(201,168,127,.25)}
+.tl-canal.audio{color:var(--c-audio);background:rgba(169,201,127,.12);border:1px solid rgba(169,201,127,.25)}
+.tl-body{padding:0 20px 18px;border-top:1px solid var(--line-soft);margin-top:2px;padding-top:14px}
+.tl-branch{margin-top:12px}
+.tl-branch-h{display:flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.tl-branch.ok .tl-branch-h{color:var(--green)}
+.tl-branch.no .tl-branch-h{color:var(--red)}
+.tl-branch-h .ic{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700}
+.tl-branch.ok .ic{background:rgba(127,175,135,.18);color:var(--green)}
+.tl-branch.no .ic{background:rgba(201,143,134,.18);color:var(--red)}
+
+/* SEARCH / TOAST / TOTOP — reuse */
+.search-ov{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:center;padding-top:13vh}
+.search-ov.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.search-box{width:100%;max-width:680px;background:var(--bg-2);border:1px solid var(--champ-deep);border-radius:16px;overflow:hidden;box-shadow:0 40px 100px -20px rgba(0,0,0,.7)}
+.search-top{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line-soft)}
+.search-top span{color:var(--champ);font-size:18px}
+#searchInput{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:16px;font-family:'Inter',sans-serif}
+#searchInput::placeholder{color:var(--muted)}
+.search-esc{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--muted);border:1px solid var(--line);padding:3px 8px;border-radius:5px}
+.search-results{max-height:60vh;overflow-y:auto;padding:8px}
+.search-empty{padding:36px;text-align:center;color:var(--muted);font-style:italic}
+.sr-item{padding:13px 16px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:4px}
+.sr-item:hover{background:var(--panel);border-color:var(--line)}
+.sr-crumb{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--champ);margin-bottom:4px}
+.sr-title{font-weight:600;font-size:14px;margin-bottom:3px}
+.sr-snippet{font-size:12.5px;color:var(--text-soft);line-height:1.45}
+mark{background:rgba(201,168,127,.3);color:inherit;padding:0 2px;border-radius:3px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel);color:var(--text);padding:13px 22px;border-radius:11px;border:1px solid var(--champ);font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;z-index:160;display:flex;align-items:center;gap:9px;transition:transform .35s var(--ease)}
+.toast::before{content:"\2713";color:var(--champ);font-weight:700}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.totop{position:fixed;bottom:28px;right:28px;width:46px;height:46px;border-radius:13px;background:var(--panel);border:1px solid var(--line);color:var(--champ);cursor:pointer;display:grid;place-items:center;font-size:18px;z-index:90;opacity:0;transform:translateY(20px);pointer-events:none;transition:all .3s var(--ease)}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:hover{border-color:var(--champ);background:var(--champ-dim)}
+footer{text-align:center;padding:34px 22px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--line-soft);margin-top:40px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em}
+
+@media(max-width:980px){.pb-grid{grid-template-columns:1fr;gap:22px}.pb-side{position:static}.pb-banner::after{display:none}}
+@media(max-width:560px){.topbar-inner{padding:0 16px}.lobby{padding:50px 16px}.pb-wrap{padding:24px 16px 60px}.pb-banner h1{font-size:28px}.pb-card{padding:22px 20px}}
+
+/* ===== VARIAÇÕES DE SCRIPT (A/B) ===== */
+.var-switch{display:flex;gap:6px;padding:10px 18px 0;flex-wrap:wrap}
+.var-chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--text-soft);cursor:pointer;transition:all .18s var(--ease)}
+.var-chip:hover{border-color:var(--champ-deep);color:var(--text)}
+.var-chip.active{background:var(--champ-dim);border-color:var(--champ);color:var(--champ);font-weight:500}
+
+/* ===== ONBOARDING / GUIA ===== */
+.guia{max-width:880px;margin:0 auto;padding:60px 26px 80px}
+.guia-back{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;margin-bottom:30px;transition:all .2s var(--ease)}
+.guia-back:hover{color:var(--champ);gap:11px}
+.guia-kicker{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--champ);margin-bottom:14px}
+.guia h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-.02em;margin-bottom:14px}
+.guia h1 em{font-style:italic;color:var(--champ)}
+.guia-lead{color:var(--text-soft);font-size:17px;max-width:60ch;margin-bottom:14px}
+.guia-time{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:7px 15px;margin-bottom:42px}
+.guia-step{display:grid;grid-template-columns:56px 1fr;gap:22px;margin-bottom:14px;background:linear-gradient(145deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:28px 30px;transition:all .3s var(--ease)}
+.guia-step:hover{border-color:var(--champ-deep);transform:translateX(4px)}
+.guia-step-n{font-family:'Fraunces',serif;font-weight:600;font-size:30px;color:var(--champ);line-height:1}
+.guia-step h3{font-family:'Fraunces',serif;font-weight:500;font-size:21px;margin-bottom:8px;letter-spacing:-.01em}
+.guia-step p{color:var(--text-soft);font-size:14.5px;margin-bottom:10px}
+.guia-step p:last-child{margin-bottom:0}
+.guia-step b{color:var(--text);font-weight:600}
+.guia-canais{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.guia-canal{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:7px 13px;border-radius:9px}
+.guia-canal::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.guia-canal.escrito{color:var(--c-escrito);background:rgba(127,168,201,.1);border:1px solid rgba(127,168,201,.22)}
+.guia-canal.ligacao{color:var(--c-ligacao);background:rgba(201,168,127,.1);border:1px solid rgba(201,168,127,.22)}
+.guia-canal.audio{color:var(--c-audio);background:rgba(169,201,127,.1);border:1px solid rgba(169,201,127,.22)}
+.guia-rule{background:linear-gradient(135deg,var(--champ-dim),transparent 70%);border:1px solid rgba(201,184,150,.25);border-left:3px solid var(--champ);border-radius:14px;padding:22px 26px;margin:30px 0}
+.guia-rule-l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);margin-bottom:9px;font-weight:500}
+.guia-rule p{font-size:15.5px;color:var(--text)}
+.guia-rule p b{color:var(--champ)}
+.guia-cta{display:inline-flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-weight:500;font-size:15px;padding:15px 28px;border-radius:12px;cursor:pointer;border:none;background:var(--champ);color:#22251f;margin-top:30px;transition:all .25s var(--ease)}
+.guia-cta:hover{background:var(--champ-bright);transform:translateY(-2px)}
+
+/* ===== PRINT / PDF ===== */
+#printArea{display:none}
+@media print{
+  body{background:#fff;color:#111}
+  body::before,body::after,.topbar,.pb-side,.totop,.toast,.search-ov,#scrollProg,.lobby,.view{display:none !important}
+  #printArea{display:block !important}
+  #printArea *{color:#111 !important}
+  .p-law{font-family:'Fraunces',serif;font-size:24px;font-weight:600;margin:0 0 4px;color:#1d2024 !important}
+  .p-sub{font-size:11px;color:#555 !important;margin-bottom:18px;border-bottom:2px solid #c9b896;padding-bottom:10px}
+  .p-mod{font-family:'Fraunces',serif;font-size:17px;font-weight:600;margin:20px 0 6px;color:#1d2024 !important;page-break-after:avoid}
+  .p-sub2{font-weight:700;font-size:12px;margin:12px 0 4px}
+  .p-txt{font-size:11px;line-height:1.5;margin-bottom:8px}
+  .p-script{background:#f5f2ec !important;border-left:2px solid #c9b896;padding:10px 12px;margin:8px 0;font-family:'Courier New',monospace;font-size:10px;line-height:1.5;white-space:pre-wrap;page-break-inside:avoid}
+  .p-script-l{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#a87 !important;margin-bottom:4px}
+  .p-cad{border:1px solid #ddd;border-radius:6px;padding:8px 12px;margin:6px 0;page-break-inside:avoid}
+  .p-cad-h{font-weight:700;font-size:11px}
+  table{font-size:9px}
+  th,td{padding:5px 7px;border:1px solid #ddd}
+  th{background:#1d2024 !important;color:#fff !important}
+}
+</style>
+</head>
+<body>
+
+<div id="scrollProg"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand" onclick="goLobby()">
+      <span class="logo-mark"><span class="bars"><i></i><i></i><i></i></span></span>
+      <span class="brand-name">Ristori<small id="brandSub">Playbook Comercial</small></span>
+    </div>
+    <div class="top-actions">
+      <button class="kbd-btn" onclick="showGuia()"><span>&#9432;</span><span>Como usar</span></button>
+      <button class="kbd-btn" onclick="openSearch()"><span>&#9906;</span><span>Buscar</span><span class="kbd-key">&#8984;K</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+
+<!-- LOBBY -->
+<section id="view-lobby" class="view active">
+  <div class="lobby">
+    <div class="lobby-head">
+      <span class="logo-mark lobby-logo reveal"><span class="bars"><i></i><i></i><i></i></span></span>
+      <div class="lobby-kicker reveal">Playbook Comercial</div>
+      <h1 class="reveal">Ristori <em>Advocacia</em></h1>
+      <p class="lobby-sub reveal">Manual operacional do time comercial. Selecione a tese do lead para abrir a trilha completa — do primeiro contato ao fechamento, com cadência de follow-up dia a dia.</p>
+    </div>
+    <div class="tese-label reveal">Selecione a tese</div>
+    <div class="tese-grid" id="teseGrid"></div>
+    <div class="lobby-foot reveal">Primeira vez aqui? <a onclick="showGuia()" style="color:var(--champ);cursor:pointer;text-decoration:underline;text-underline-offset:3px">Leia o guia rápido de uso (2 min)</a></div>
+    <div class="lobby-foot reveal" style="margin-top:14px">Ristori Sociedade Individual de Advocacia · Documento interno · Prov. 205/2021 CFOAB</div>
+  </div>
+</section>
+
+<!-- GUIA / ONBOARDING -->
+<section id="view-guia" class="view">
+  <div class="guia">
+    <button class="guia-back" onclick="goLobby()">&larr; Voltar</button>
+    <div class="guia-kicker reveal">Guia Rápido</div>
+    <h1 class="reveal">Como usar o <em>playbook</em></h1>
+    <p class="guia-lead reveal">Este é o manual de operação do time comercial. Em poucos minutos você entende a lógica e já consegue atender com ele aberto ao lado.</p>
+    <div class="guia-time reveal">&#9201; Leitura de 2 minutos</div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">1</div><div>
+      <h3>Identifique a tese do lead</h3>
+      <p>Na tela inicial, escolha entre <b>BPC/LOAS</b>, <b>Salário-Maternidade</b> ou <b>Auxílio-Doença</b>. Cada uma abre uma trilha completa, com scripts feitos sob medida para aquele público.</p>
+    </div></div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">2</div><div>
+      <h3>Siga os módulos na ordem</h3>
+      <p>A trilha tem 11 módulos, do <b>briefing da persona</b> ao <b>glossário</b>. No primeiro atendimento, use Recepção e Qualificação. A navegação fica fixa na lateral esquerda.</p>
+    </div></div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">3</div><div>
+      <h3>A cadência é o coração</h3>
+      <p>O módulo 05 (<b>Cronograma de Cadência</b>, marcado com ★) é a régua de follow-up. Ele diz, dia a dia, <b>o que fazer e por qual canal</b>. Três canais:</p>
+      <div class="guia-canais">
+        <span class="guia-canal escrito">Escrito (WhatsApp)</span>
+        <span class="guia-canal ligacao">Ligação</span>
+        <span class="guia-canal audio">Áudio</span>
+      </div>
+    </div></div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">4</div><div>
+      <h3>Escolha o cenário certo</h3>
+      <p>Dentro da cadência há três réguas: <b>Principal</b> (lead novo que não respondeu/agendou), <b>Agendou e Faltou</b> e <b>Consultou e Não Fechou</b>. Use a régua que corresponde ao momento do seu lead.</p>
+    </div></div>
+
+    <div class="guia-rule reveal"><div class="guia-rule-l">Regra de ouro da cadência</div><p>Toda <b>ligação</b> tem dois caminhos: se o lead <b>atendeu</b>, use o roteiro da ligação. Se <b>não atendeu</b>, dispare na hora o <b>resgate por escrito</b>. Ligação nunca fica sem retorno escrito.</p></div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">5</div><div>
+      <h3>Copie e personalize</h3>
+      <p>Cada script tem <b>Copiar</b> (texto pronto) e <b>Em partes</b> (quebra em balõezinhos pra mandar um de cada vez). Onde houver <b>Versão 1 / Versão 2</b>, escolha o tom que combina com a conversa — assim o lead não recebe sempre a mesma frase.</p>
+      <p>Substitua os campos entre colchetes: <b>[NOME]</b>, <b>[SECRETÁRIA]</b>, <b>[ADVOGADO(A)]</b>, <b>[DIA]</b>, <b>[HORÁRIO]</b>.</p>
+    </div></div>
+
+    <div class="guia-step reveal"><div class="guia-step-n">6</div><div>
+      <h3>Ferramentas de apoio</h3>
+      <p><b>Buscar (&#8984;K):</b> encontra qualquer script por palavra, em todas as teses. <b>Exportar PDF:</b> gera a trilha completa da tese pra imprimir ou arquivar.</p>
+    </div></div>
+
+    <div class="guia-rule reveal"><div class="guia-rule-l">Conformidade — sempre</div><p>Nunca prometa resultado, valor de benefício ou prazo garantido. Use sempre <b>"você pode ter direito"</b>. O CTA é institucional: falar com a equipe. Isso vale para todo script, em qualquer tese.</p></div>
+
+    <button class="guia-cta reveal" onclick="goLobby()">Começar &rarr;</button>
+  </div>
+</section>
+
+<!-- TRILHA -->
+<section id="view-trilha" class="view">
+  <div class="pb-wrap">
+    <div class="pb-grid">
+      <aside class="pb-side">
+        <button class="pb-back" onclick="goLobby()">&larr; Trocar tese</button>
+        <div class="pb-tese-badge"><span class="dot"></span><span class="txt" id="badgeTxt"></span></div>
+        <div class="pb-progress"><div class="pb-progress-bar" id="progressBar"></div></div>
+        <div class="pb-count" id="progressCount"></div>
+        <ul class="pb-nav" id="pbNav"></ul>
+        <button class="pb-dl" onclick="exportPDF()">&#8595;&nbsp; Exportar PDF</button>
+      </aside>
+      <article class="pb-content">
+        <div id="pbBody"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<button class="totop" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
+<div class="search-ov" id="searchOv"><div class="search-box"><div class="search-top"><span>&#9906;</span><input id="searchInput" type="text" placeholder="Buscar script, etapa, objeção..." autocomplete="off"><span class="search-esc">ESC</span></div><div class="search-results" id="searchResults"></div></div></div>
+<div class="toast" id="toast">Copiado</div>
+<div id="printArea"></div>
+<footer>RISTORI SOCIEDADE INDIVIDUAL DE ADVOCACIA · PLAYBOOK COMERCIAL · USO INTERNO</footer>
+
+<script>
+/* ============================================================
+   DADOS — PLAYBOOK RISTORI
+   3 teses · 11 módulos · cadência por cenário
+   ============================================================ */
+
+/* estrutura de módulos (igual nas 3 trilhas) */
+const MODULOS = [
+ {n:1,  t:"Briefing da Persona",     sec:"Diagnóstico"},
+ {n:2,  t:"Recepção",                sec:"Diagnóstico"},
+ {n:3,  t:"Qualificação",            sec:"Operação"},
+ {n:4,  t:"Resposta por Cenário",    sec:"Operação"},
+ {n:5,  t:"Cronograma de Cadência",  sec:"Operação", star:true},
+ {n:6,  t:"Agendamento e Lembretes", sec:"Operação"},
+ {n:7,  t:"Estrutura da Consulta",   sec:"Operação"},
+ {n:8,  t:"Scripts de Objeção",      sec:"Operação"},
+ {n:9,  t:"KPIs e Metas",            sec:"Métricas"},
+ {n:10, t:"Quick Reference",         sec:"Métricas"},
+ {n:11, t:"Glossário",               sec:"Métricas"},
+];
+
+/* ====== ESTRUTURA DA CADÊNCIA (dias/canais/objetivos — igual nas 3 teses) ====== */
+const RITMOS = {
+ principal: {
+   nome:"Principal · Não respondeu / Não agendou",
+   passos:[
+    {dia:"D0",  toque:"Atendimento inicial",   canal:"escrito", obj:"Recepcionar, qualificar e tentar agendar.", key:"d0"},
+    {dia:"D0+", toque:"Reforço no mesmo dia",   canal:"escrito", obj:"Se qualificou mas não agendou na hora.", key:"d0b"},
+    {dia:"D1",  toque:"Follow 1",               canal:"escrito", obj:"Retomada leve, sem pressionar.", key:"d1"},
+    {dia:"D2",  toque:"Follow 2",               canal:"ligacao", obj:"Criar conexão pela voz.", key:"d2", branch:true},
+    {dia:"D4",  toque:"Follow 3",               canal:"audio",   obj:"Toque pessoal, humaniza o contato.", key:"d4"},
+    {dia:"D6",  toque:"Follow 4",               canal:"ligacao", obj:"Nova tentativa de voz.", key:"d6", branch:true},
+    {dia:"D9",  toque:"Follow 5",               canal:"escrito", obj:"Gancho de valor / prazo do direito.", key:"d9"},
+    {dia:"D14", toque:"Follow 6",               canal:"ligacao", obj:"Última tentativa ativa por voz.", key:"d14", branch:true},
+    {dia:"D21", toque:"Follow 7",               canal:"escrito", obj:"Encerra o ciclo — porta aberta.", key:"d21"},
+    {dia:"D40", toque:"Reativação",             canal:"escrito", obj:"Resgate de longo prazo.", key:"d40"},
+   ]
+ },
+ faltou: {
+   nome:"Agendou e Faltou",
+   passos:[
+    {dia:"+1h", toque:"Resgate imediato",  canal:"escrito", obj:"Acolher, sem cobrar.", key:"f1"},
+    {dia:"D1",  toque:"Remarcação",        canal:"ligacao", obj:"Reagendar pela voz.", key:"f2", branch:true},
+    {dia:"D3",  toque:"Última tentativa",  canal:"escrito", obj:"Oferecer novos horários, porta aberta.", key:"f3"},
+   ]
+ },
+ naofechou: {
+   nome:"Consultou e Não Fechou",
+   passos:[
+    {dia:"D1",  toque:"Pós-consulta",       canal:"audio",   obj:"Agradecer e abrir canal de dúvida (advogado).", key:"n1"},
+    {dia:"D3",  toque:"Tirar dúvida",       canal:"escrito", obj:"\"Ficou alguma dúvida?\"", key:"n2"},
+    {dia:"D7",  toque:"Quebra de objeção",  canal:"ligacao", obj:"Entender o que está segurando.", key:"n3", branch:true},
+    {dia:"D15", toque:"Gancho de valor",    canal:"escrito", obj:"Reforçar o direito em jogo.", key:"n4"},
+    {dia:"D30", toque:"Reativação",         canal:"escrito", obj:"Porta aberta, sem pressão.", key:"n5"},
+   ]
+ }
+};
+
+/* ====== TESES ====== */
+const TESES = {
+
+/* =======================================================================
+   TESE 1 — BPC / LOAS
+   ======================================================================= */
+bpc:{
+ nome:"BPC / LOAS",
+ tagline:"Benefício Assistencial",
+ desc:"Idoso (65+) ou pessoa com deficiência, em família de baixa renda. Não exige contribuição ao INSS.",
+ chips:["Idoso 65+","Deficiência","Baixa renda"],
+ conteudo:{
+  1:{intro:"O público do BPC é simples, muitas vezes idoso ou familiar de pessoa com deficiência. Chega inseguro, com medo da burocracia e, muito frequentemente, achando que \"ganha demais\" para ter direito. Acolhimento e linguagem simples são tudo.",
+     parts:["Quem é a lead","Estado emocional","Tom obrigatório","O que vende"],
+     body:`
+<h3 class="sub-h">Quem é a Lead</h3>
+<ul class="blist">
+<li>Idoso de <b>65 anos ou mais</b>, OU pessoa com deficiência (de qualquer idade), OU familiar que cuida.</li>
+<li>Família de <b>baixa renda</b>; pouca familiaridade com burocracia.</li>
+<li>Frequentemente já foi <b>negada</b> e desanimou.</li>
+</ul>
+<h3 class="sub-h">Estado Emocional</h3>
+<ul class="blist">
+<li><b>Insegurança:</b> "será que tenho direito?"</li>
+<li><b>Vergonha e desconfiança</b> da burocracia.</li>
+<li>Acredita no mito de que "tem uma rendinha, então não tem direito".</li>
+</ul>
+<h3 class="sub-h">Tom Obrigatório</h3>
+<div class="dual">
+<div class="dcard ok"><div class="dcard-h">Pode usar</div><ul>
+<li>Linguagem MUITO simples, sem juridiquês</li>
+<li>Tom caloroso e paciente, tratar por "senhor/senhora" quando idoso</li>
+<li>Explicar o que é o BPC ("aquele de um salário mínimo")</li>
+<li>Desarmar o medo da renda com leveza</li>
+</ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca usar</div><ul>
+<li>Prometer que vai conseguir o benefício</li>
+<li>Pressa — esse público decide devagar</li>
+<li>Termos técnicos (CadÚnico sem explicar, "miserabilidade", etc.)</li>
+<li>Tom infantilizado ou condescendente</li>
+</ul></div>
+</div>
+<h3 class="sub-h">O que Vende</h3>
+<div class="callout"><div class="callout-l">O que vende</div><p><b>Acolhimento + clareza.</b> Esse público contrata quem explica com paciência e tira o medo de "não ter direito". Quem trata bem e fala simples, fecha.</p></div>
+`},
+  2:{intro:"Primeira mensagem precisa explicar o que é o benefício e desarmar o medo logo de cara.",
+     parts:["Mensagem de recepção","Por que funciona"],
+     body:`
+<h3 class="sub-h">Mensagem de Recepção</h3>
+<div class="script"><div class="script-head"><span class="script-label">Recepção</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div>
+<div class="script-text">Olá! Aqui é a [SECRETÁRIA], da equipe do escritório Ristori, especialista em BPC/LOAS.
+
+A senhora chegou pra saber sobre o BPC, aquele benefício de um salário mínimo, certo?
+
+Posso fazer algumas perguntas rápidas pra entender sua situação e te explicar se tem direito? É simples, pode ficar tranquila.</div><div class="bubbles"></div>
+<div class="script-why"><b>Por quê:</b> explica o que é o BPC na hora; "é simples, fica tranquila" desarma o medo da burocracia.</div></div>
+`},
+  3:{intro:"Cinco perguntas que separam os 3 caminhos do BPC (idoso / PcD / criança) e tratam a renda com cuidado.",
+     parts:["P1 a P5","Resposta por cenário"],
+     body:`
+<h3 class="sub-h">P1 — Nome</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P1</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Primeiro, qual o seu nome?</div></div>
+<h3 class="sub-h">P2 — Para quem é</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P2</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">O benefício é pra você ou pra outra pessoa da família? E essa pessoa é:
+
+- Idosa (65 anos ou mais)
+- Pessoa com deficiência ou doença
+- Criança com deficiência (autismo, por exemplo)</div>
+<div class="script-why"><b>Por quê:</b> separa os 3 caminhos do BPC já na entrada.</div></div>
+<h3 class="sub-h">P3 — Idade ou condição</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P3</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[Se idoso] Qual a idade exata?
+[Se deficiência] Me conta um pouco: qual a condição? Já tem laudo médico ou acompanhamento?</div></div>
+<h3 class="sub-h">P4 — A renda (com leveza)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P4 · cuidado</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Pra esse benefício a renda da família conta, mas não precisa ser exato agora. Em casa, quantas pessoas moram juntas, e mais ou menos qual a renda total que entra por mês?</div>
+<div class="script-why"><b>Por quê:</b> a renda é o que mais derruba e mais confunde. Pergunte com leveza pra não travar nem assustar.</div></div>
+<h3 class="sub-h">P5 — Já tentou</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P5</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você já tentou dar entrada no INSS? Se sim: foi negado, está em análise, ou cortaram?</div></div>
+
+<h3 class="sub-h">Resposta por Cenário</h3>
+<span class="s-tag s-tag-ok">Caso forte</span>
+<div class="script"><div class="script-head"><span class="script-label">Idoso/PcD + renda baixa</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], pelo que me contou, sua situação tem tudo pra ser analisada com atenção. O/A [ADVOGADO(A)] confirma os detalhes e te explica o passo a passo. Posso te encaixar [DIA] às [HORÁRIO]?</div></div>
+<span class="s-tag s-tag-amber">Renda no limite</span>
+<div class="script"><div class="script-head"><span class="script-label">Acha que ganha demais</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], muita gente acha que não tem direito por causa da renda e nem tenta. Mas a lei permite descontar gastos, considerar a situação real da família, e em muitos casos a pessoa tinha direito sim. Por isso vale a análise. Quer agendar?</div>
+<div class="script-why"><b>Por quê:</b> resgata o lead que se autoexclui pela renda — é o maior público perdido do BPC.</div></div>
+<span class="s-tag s-tag-red">Negado/cortado</span>
+<div class="script"><div class="script-head"><span class="script-label">Já teve negativa</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], negativa ou corte do INSS não é o fim. Muitos casos são revertidos. Mas precisa analisar o motivo. Vou priorizar seu agendamento. Tem [DIA] às [HORÁRIO]?</div></div>
+`},
+  4:{intro:"Os três cenários do BPC e como conduzir cada um. Já detalhados no módulo de qualificação — aqui o resumo de bolso.",
+     parts:["Forte","Renda no limite","Negado"],
+     body:`
+<table><thead><tr><th>Cenário</th><th>Sinal</th><th>Conduta</th></tr></thead><tbody>
+<tr><td>Forte</td><td>Idoso 65+ ou PcD, renda claramente baixa</td><td>Agendar direto, tom de confiança</td></tr>
+<tr><td>Renda no limite</td><td>"Acho que ganho demais"</td><td>Explicar dedução de gastos, agendar análise</td></tr>
+<tr><td>Negado/cortado</td><td>INSS já negou</td><td>Priorizar, focar em reversão</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Regra de ouro</div><p>No BPC, a objeção da <b>renda</b> é a que mais faz a pessoa desistir sozinha. Sempre que ouvir "ganho demais", responda que <b>gastos podem ser descontados</b> e que só a análise mostra.</p></div>
+`},
+  6:{intro:"Confirmar agendamento, listar documentos e mandar lembretes — com paciência, esse público precisa de clareza.",
+     parts:["Confirmação","Lembrete 24h","Lembrete 2h"],
+     body:`
+<h3 class="sub-h">Confirmação</h3>
+<div class="script"><div class="script-head"><span class="script-label">Agendamento</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], agendado.
+
+Data: [DIA E HORA]
+Com: [ADVOGADO(A)] - Especialista em BPC/LOAS
+Formato: [Presencial / Online]
+
+Se tiver em mãos, ajuda muito:
+- RG e CPF (seu e de quem mora na casa)
+- Comprovante de renda de quem trabalha na família
+- Comprovante de residência
+- Laudos e exames médicos (se for por deficiência)
+- CadÚnico, se já tiver
+- Carta de negativa do INSS (se já tentou)
+
+Se faltar algo, a gente orienta depois. Posso confirmar?</div><div class="bubbles"></div></div>
+<h3 class="sub-h">Lembrete 24h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 24h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], confirmando nossa conversa de amanhã, [DIA] às [HORÁRIO], com o/a [ADVOGADO(A)]. [Link/Endereço]. Tudo certo?</div></div>
+<h3 class="sub-h">Lembrete 2h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 2h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], tudo certo pra daqui a 2h? [Link/Endereço]. O/A [ADVOGADO(A)] já está com seu caso em mãos.</div></div>
+`},
+  7:{intro:"30 a 40 minutos, com muita escuta e linguagem simples.",
+     parts:["Abertura","Escuta","Análise","Fechamento"],
+     body:`
+<h3 class="sub-h">Abertura (3-5 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], muito prazer. Sou o/a [ADVOGADO(A)]. Vou te explicar tudo com calma e do jeito mais simples possível. Pode perguntar o que quiser. Me conta a situação da sua família.</div></div>
+<h3 class="sub-h">Escuta (8-10 min)</h3>
+<ul class="blist"><li>Quantas pessoas moram na casa?</li><li>Quem trabalha e quanto recebe?</li><li>Há gasto fixo com remédio ou tratamento?</li><li>Já tem CadÚnico? Já tentou no INSS?</li></ul>
+<h3 class="sub-h">Análise técnica (12-15 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o BPC é um salário mínimo pra idoso de 65+ ou pessoa com deficiência, desde que a família se encaixe na renda. Não precisa ter contribuído. A renda considera gastos com saúde e a situação real - por isso muita gente que "acha que ganha demais" tem direito. No seu caso: [enquadrar]. Caminho: organizar documentos e CadÚnico, pedido no INSS, e via judicial se negar.</div></div>
+<h3 class="sub-h">Fechamento (5-7 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o escritório trabalha assim: [HONORÁRIOS] / [o que está incluso]. Sendo honesto, o BPC pode demorar e quem decide é o INSS ou a Justiça - não posso garantir. Mas garanto trabalho sério. Prefere pensar ou se sente à vontade pra começar?</div></div>
+`},
+  8:{intro:"As objeções mais comuns do BPC — a da renda é a rainha.",
+     parts:["Ganho demais","Já fui negado","Outro benefício","Sem dinheiro","Vou pensar"],
+     body:`
+<h3 class="sub-h">"Acho que ganho demais"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · renda</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], essa é a confusão mais comum e faz muita gente perder o benefício sem tentar. A renda conta, mas a lei permite descontar gastos com saúde e considerar a situação real da família. Em muitos casos a pessoa tinha direito. Só a análise mostra. Vale a conversa.</div></div>
+<h3 class="sub-h">"Já fui negado"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · negativa</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], negativa do INSS não é o fim. Muitos casos são revertidos depois, principalmente quando a negativa foi por renda ou avaliação incompleta. Vale entender o motivo antes de desistir.</div></div>
+<h3 class="sub-h">"Tenho medo de perder outro benefício"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · medo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], por isso a análise é importante: o/a [ADVOGADO(A)] verifica sua situação completa e te orienta com segurança, sem risco. É justamente pra isso que serve a conversa.</div></div>
+<h3 class="sub-h">"Não tenho dinheiro pra advogado"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · custo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], entendo - quem busca o BPC normalmente está apertado. Por isso o escritório trabalha com formas que cabem na realidade da família. A análise inicial já te mostra se vale. Quer fazer?</div></div>
+<h3 class="sub-h">"Vou pensar"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · pensar</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Claro, [NOME]. Sem pressa. Se aparecer qualquer dúvida, me chama - qualquer hora. Tô à disposição.</div></div>
+`},
+  9:{intro:"O que medir nessa tese.",
+     parts:["Funil","Qualidade"],
+     body:`
+<table><thead><tr><th>Métrica</th><th>Meta</th><th>Alerta</th></tr></thead><tbody>
+<tr><td>Resposta inicial</td><td>&gt; 75%</td><td>&lt; 60%</td></tr>
+<tr><td>Qualificação completa</td><td>&gt; 50%</td><td>&lt; 38%</td></tr>
+<tr><td>Agendamento</td><td>&gt; 45%</td><td>&lt; 30%</td></tr>
+<tr><td>Comparecimento</td><td>&gt; 70%</td><td>&lt; 55%</td></tr>
+<tr><td>Fechamento (D+30)</td><td>&gt; 50%</td><td>&lt; 35%</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Atenção</div><p>BPC tem ciclo mais lento e muita decisão em família. Não confunda "demora" com "perdido" — o follow-up longo (D40) recupera muito caso.</p></div>
+`},
+  10:{intro:"Consulta rápida no calor do atendimento.",
+     parts:["Caso forte","Documentos","Frases-âncora"],
+     body:`
+<h3 class="sub-h">Sinais de caso forte</h3>
+<ul class="blist"><li>Idoso 65+ ou deficiência com laudo</li><li>Renda familiar baixa por pessoa</li><li>Gastos altos com saúde (deduzíveis)</li><li>Já tem ou topa fazer CadÚnico</li></ul>
+<h3 class="sub-h">Documentos</h3>
+<ol class="blist"><li>RG e CPF (família toda)</li><li>Comprovante de renda</li><li>Comprovante de residência</li><li>Laudos e exames (se PcD)</li><li>CadÚnico</li><li>Negativa do INSS (se houve)</li></ol>
+<h3 class="sub-h">Frases-âncora</h3>
+<div class="dual"><div class="dcard ok"><div class="dcard-h">Pode falar</div><ul><li>"É um salário mínimo, sem precisar ter contribuído"</li><li>"Gastos com saúde podem ser descontados da renda"</li><li>"Muita gente que acha que ganha demais tem direito"</li></ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca falar</div><ul><li>"Vou conseguir seu benefício"</li><li>"É rápido" (BPC demora)</li><li>Valor de honorário em público</li></ul></div></div>
+`},
+  11:{intro:"Termos traduzidos pra equipe.",
+     parts:["A-Z"],
+     body:`
+<table><thead><tr><th style="width:30%">Termo</th><th>O que é</th></tr></thead><tbody>
+<tr><td>BPC/LOAS</td><td>Benefício de um salário mínimo para idoso (65+) ou pessoa com deficiência de baixa renda. Assistencial, não exige contribuição.</td></tr>
+<tr><td>CadÚnico</td><td>Cadastro Único do governo. Pré-requisito para pedir o BPC.</td></tr>
+<tr><td>Miserabilidade</td><td>Critério de baixa renda da família. Pode considerar gastos e situação real.</td></tr>
+<tr><td>Renda por pessoa</td><td>Renda da casa dividida pelo nº de moradores. Base do critério.</td></tr>
+<tr><td>Avaliação biopsicossocial</td><td>Perícia que avalia a deficiência e as barreiras na vida da pessoa.</td></tr>
+</tbody></table>
+`},
+ },
+ /* scripts da cadência — BPC */
+ cad:{
+  principal:{
+   d0:["Olá! Aqui é a [SECRETÁRIA], do escritório Ristori, especialista em BPC/LOAS. A senhora chegou pra saber sobre aquele benefício de um salário mínimo, certo? Posso te fazer umas perguntas rápidas? É simples.",
+       "Oi [NOME], tudo bem? Aqui é a [SECRETÁRIA], do escritório Ristori. Vi que a senhora quer entender sobre o BPC, aquele benefício de um salário mínimo. Posso te ajudar com isso? Vou te explicar de um jeito bem simples."],
+   d0b:"[NOME], consigo já deixar um horário reservado com o/a [ADVOGADO(A)] pra te explicar tudo certinho sobre o BPC. Tem [DIA] às [HORÁRIO]? Sem compromisso.",
+   d1:["Oi [NOME], passando pra saber se posso te ajudar a entender se a senhora tem direito ao BPC. Quando puder, é só me responder aqui. Sem pressa.",
+       "[NOME], bom dia! Continuo à disposição pra te explicar sobre o BPC quando a senhora puder. É rapidinho e sem nenhum compromisso. Fico no aguardo."],
+   d2_atendeu:"[Ligação] Oi [NOME], aqui é a [SECRETÁRIA], do escritório Ristori. Tô te ligando pra te explicar com calma como funciona o BPC e ver se a senhora se encaixa. Tem uns minutinhos agora?",
+   d2_naoatendeu:"Oi [NOME], tentei te ligar agora pra falar sobre o BPC, mas não consegui. Quando puder falar, me avisa aqui que eu te ligo no melhor horário. Ou, se preferir, a gente resolve tudo por aqui mesmo.",
+   d4:"[Áudio] Oi [NOME], é a [SECRETÁRIA] de novo. Gravei esse áudio porque é mais fácil de explicar: muita gente acha que não tem direito ao BPC por causa da renda, e na verdade tem. Queria muito te ajudar a descobrir o seu caso. Me chama quando puder, tá bom?",
+   d6_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori. Passando de novo pra ver se consigo te ajudar com o BPC. Posso te explicar rapidinho?",
+   d6_naoatendeu:"[NOME], tentei te ligar de novo. Não quero te incomodar, só não queria que a senhora perdesse a chance de descobrir se tem direito. Quando puder, é só me chamar aqui.",
+   d9:["[NOME], um detalhe importante: no caso do BPC, quanto antes a gente organiza a documentação e o CadÚnico, mais rápido pode sair. Se a senhora quiser, dou o primeiro passo com você. Tô aqui.",
+       "[NOME], só passando um valor importante: muita gente que tinha direito ao BPC deixou de receber por nunca ter procurado orientação. Eu não queria que fosse o seu caso. Quando quiser, é só me chamar."],
+   d14_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Última vez que te ligo pra não ficar insistindo. Só queria saber se ainda faz sentido a gente conversar sobre o seu BPC.",
+   d14_naoatendeu:"[NOME], tentei falar com a senhora algumas vezes. Vou parar de ligar pra não incomodar. Mas quero deixar claro: quando quiser entender se tem direito ao BPC, é só me chamar aqui. A porta está aberta.",
+   d21:["[NOME], encerrando por aqui pra não atrapalhar. Se um dia a senhora ou alguém da família quiser saber sobre o BPC, é só me mandar mensagem. Vai ser um prazer ajudar.",
+       "[NOME], vou deixar a senhora à vontade. Mas fica o convite: se um dia quiser tirar a dúvida sobre o BPC, a porta do escritório Ristori está sempre aberta. Cuide-se."],
+   d40:"Oi [NOME], tudo bem? Passando depois de um tempo só pra saber como a senhora está. Se ainda fizer sentido conversar sobre o BPC, estou à disposição. Cuide-se."
+  },
+  faltou:{
+   f1:"[NOME], a senhora tinha uma conversa marcada com o/a [ADVOGADO(A)] e acabou não conseguindo vir. Tá tudo bem? Acontece. Quer que eu remarque?",
+   f2_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori. Vi que não deu pra vir na conversa. Sem problema! Quer remarcar pra um horário melhor?",
+   f2_naoatendeu:"[NOME], tentei te ligar pra remarcar nossa conversa do BPC. Me diz dois horários que sejam bons pra senhora que eu encaixo.",
+   f3:"[NOME], quando a senhora quiser remarcar a conversa sobre o BPC, é só me dizer. O/A [ADVOGADO(A)] continua à disposição. Sem pressa."
+  },
+  naofechou:{
+   n1:"[Áudio - advogado(a)] Oi [NOME], aqui é o/a [ADVOGADO(A)]. Foi muito bom conversar com a senhora. Qualquer dúvida que aparecer depois sobre o BPC, pode me mandar mensagem que eu respondo. Tô à disposição.",
+   n2:"[NOME], passando pra saber se ficou alguma dúvida sobre o que conversamos do seu BPC. Posso esclarecer qualquer coisa.",
+   n3_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Queria entender se ficou alguma dúvida sobre o BPC ou se tem algo te segurando pra gente seguir. Posso ajudar?",
+   n3_naoatendeu:"[NOME], tentei te ligar. Se ficou qualquer dúvida sobre o BPC - documentos, prazos, como funciona - me chama aqui que eu esclareço, ou peço pro/pra [ADVOGADO(A)] te ligar.",
+   n4:"[NOME], só reforçando: o BPC é um direito que pode mudar a vida financeira da família. Se ainda fizer sentido seguir, estou aqui pra dar o primeiro passo com a senhora.",
+   n5:"Oi [NOME], tudo bem? Se ainda quiser seguir com o pedido do BPC, é só me dizer. A porta segue aberta, agora ou quando a senhora estiver pronta."
+  }
+ }
+},
+
+/* =======================================================================
+   TESE 2 — SALÁRIO-MATERNIDADE
+   ======================================================================= */
+maternidade:{
+ nome:"Salário-Maternidade",
+ tagline:"Benefício à Gestante / Mãe",
+ desc:"Gestantes e mães (inclusive adotantes) com direito ao benefício — incluindo desempregadas, rurais, MEI e autônomas que muitas vezes não sabem que têm direito.",
+ chips:["Gestante","Mãe recente","Rural / MEI"],
+ conteudo:{
+  1:{intro:"O público são gestantes e mães recentes, muitas ansiosas e com pressa (o tempo da gravidez/nascimento corre). Muitas não sabem que têm direito - principalmente desempregadas, rurais, autônomas e MEI.",
+     parts:["Quem é a lead","Estado emocional","Tom obrigatório","O que vende"],
+     body:`
+<h3 class="sub-h">Quem é a Lead</h3>
+<ul class="blist">
+<li>Gestante (a partir do 6º mês costuma buscar) ou mãe recente (até pouco depois do parto).</li>
+<li>Inclui <b>adotantes</b>, e principalmente quem não sabe que tem direito: <b>desempregada</b> (período de graça), <b>rural</b>, <b>MEI</b>, <b>autônoma/contribuinte individual</b>.</li>
+<li>Renda variada; urgência ligada ao tempo da gestação/nascimento.</li>
+</ul>
+<h3 class="sub-h">Estado Emocional</h3>
+<ul class="blist">
+<li><b>Ansiedade</b> e pressa — o prazo corre com a gravidez.</li>
+<li>Insegurança financeira pela chegada do bebê.</li>
+<li>Desconhecimento: "achei que só quem tem carteira assinada recebe".</li>
+</ul>
+<h3 class="sub-h">Tom Obrigatório</h3>
+<div class="dual">
+<div class="dcard ok"><div class="dcard-h">Pode usar</div><ul>
+<li>Tom acolhedor, leve e ágil (ela tem pressa)</li>
+<li>Esclarecer que desempregada/rural/MEI também pode ter direito</li>
+<li>Objetividade carinhosa</li>
+</ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca usar</div><ul>
+<li>Prometer valor ou aprovação</li>
+<li>Demora — o tempo dela é curto</li>
+<li>Juridiquês (período de graça sem explicar, "qualidade de segurada", etc.)</li>
+</ul></div>
+</div>
+<h3 class="sub-h">O que Vende</h3>
+<div class="callout"><div class="callout-l">O que vende</div><p><b>Clareza rápida + a revelação do direito.</b> Muitas não sabem que têm direito. Quem mostra isso de forma simples e ágil, e respeita a pressa dela, fecha.</p></div>
+`},
+  2:{intro:"Primeira mensagem ágil, acolhedora e que já abre a possibilidade do direito mesmo pra quem não tem carteira.",
+     parts:["Mensagem de recepção","Por que funciona"],
+     body:`
+<h3 class="sub-h">Mensagem de Recepção</h3>
+<div class="script"><div class="script-head"><span class="script-label">Recepção</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div>
+<div class="script-text">Olá! Aqui é a [SECRETÁRIA], da equipe do escritório Ristori, especialista em salário-maternidade.
+
+Você chegou pra saber sobre o salário-maternidade, certo? Posso te explicar rapidinho?
+
+Um detalhe importante: mesmo quem está desempregada, é autônoma, MEI ou trabalhadora rural pode ter direito. Posso te fazer algumas perguntas pra entender seu caso?</div><div class="bubbles"></div>
+<div class="script-why"><b>Por quê:</b> já desarma o mito ("só carteira assinada recebe") na primeira mensagem — é o que faz ela continuar.</div></div>
+`},
+  3:{intro:"Cinco perguntas que identificam o tipo de segurada (o que define o direito) e a urgência do prazo.",
+     parts:["P1 a P5","Resposta por cenário"],
+     body:`
+<h3 class="sub-h">P1 — Nome</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P1</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Primeiro, qual o seu nome?</div></div>
+<h3 class="sub-h">P2 — Momento</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P2</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você está gestante ou o bebê já nasceu? Se já nasceu, faz quanto tempo? (ou foi adoção?)</div>
+<div class="script-why"><b>Por quê:</b> define a urgência. O direito tem prazo — quanto mais recente, melhor.</div></div>
+<h3 class="sub-h">P3 — Situação de trabalho (a chave)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P3 · chave</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Hoje você trabalha como:
+
+- Carteira assinada (CLT)
+- Desempregada (mas já trabalhei com carteira)
+- Autônoma / MEI / contribuinte
+- Trabalhadora rural
+- Nunca contribuí / nunca trabalhei registrada</div>
+<div class="script-why"><b>Por quê:</b> é o que define se e como ela tem direito. Cada tipo tem um caminho.</div></div>
+<h3 class="sub-h">P4 — Tempo de contribuição/trabalho</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P4</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você lembra mais ou menos há quanto tempo trabalha ou contribui? E quando foi a última vez que trabalhou com carteira ou pagou o INSS?</div></div>
+<h3 class="sub-h">P5 — Já pediu</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P5</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você já tentou pedir o salário-maternidade no INSS? Foi negado ou ainda não tentou?</div></div>
+
+<h3 class="sub-h">Resposta por Cenário</h3>
+<span class="s-tag s-tag-ok">Caso forte</span>
+<div class="script"><div class="script-head"><span class="script-label">CLT ou contribuindo, recente</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], pelo que me contou, você tem fortes elementos pra receber. O/A [ADVOGADO(A)] confirma e te explica o passo a passo. Como o prazo corre, vale agendar logo. Tem [DIA] às [HORÁRIO]?</div></div>
+<span class="s-tag s-tag-amber">Desempregada / rural / MEI</span>
+<div class="script"><div class="script-head"><span class="script-label">Acha que não tem direito</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], muita gente na sua situação acha que não tem direito e nem tenta. Mas desempregada (no período de graça), rural e MEI também podem receber. Vale a análise pra confirmar. Quer agendar?</div>
+<div class="script-why"><b>Por quê:</b> esse é o maior público perdido do salário-maternidade — quem não sabe que tem direito.</div></div>
+<span class="s-tag s-tag-red">Negado</span>
+<div class="script"><div class="script-head"><span class="script-label">INSS já negou</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], negativa não é o fim - muitos casos são revertidos. Mas precisa analisar o motivo, e o prazo importa. Vou priorizar. Tem [DIA] às [HORÁRIO]?</div></div>
+`},
+  4:{intro:"Os cenários do salário-maternidade — resumo de bolso.",
+     parts:["Forte","Não sabe que tem direito","Negado"],
+     body:`
+<table><thead><tr><th>Cenário</th><th>Sinal</th><th>Conduta</th></tr></thead><tbody>
+<tr><td>Forte</td><td>CLT ou contribuindo, parto recente/gestante</td><td>Agendar logo (prazo corre)</td></tr>
+<tr><td>Não sabe que tem direito</td><td>Desempregada, rural, MEI, autônoma</td><td>Revelar o direito, agendar análise</td></tr>
+<tr><td>Negado</td><td>INSS negou</td><td>Priorizar, focar em reversão e prazo</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Regra de ouro</div><p>O grande resgate é a mulher que <b>não sabe que tem direito</b> (desempregada/rural/MEI). E sempre lembrar: <b>o prazo corre</b> — agilidade aqui converte.</p></div>
+`},
+  6:{intro:"Agendamento ágil — ela tem pressa.",
+     parts:["Confirmação","Lembrete 24h","Lembrete 2h"],
+     body:`
+<h3 class="sub-h">Confirmação</h3>
+<div class="script"><div class="script-head"><span class="script-label">Agendamento</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], agendado.
+
+Data: [DIA E HORA]
+Com: [ADVOGADO(A)] - Especialista em Salário-Maternidade
+Formato: [Presencial / Online]
+
+Se tiver em mãos, ajuda muito:
+- RG e CPF
+- Carteira de trabalho ou CNIS
+- Comprovante do nascimento (certidão) ou da gravidez
+- Comprovantes de contribuição / atividade (se MEI, autônoma ou rural)
+- Carta de negativa do INSS (se já tentou)
+
+Se faltar algo, a gente orienta depois. Posso confirmar?</div><div class="bubbles"></div></div>
+<h3 class="sub-h">Lembrete 24h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 24h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], confirmando nossa conversa de amanhã, [DIA] às [HORÁRIO], com o/a [ADVOGADO(A)]. [Link/Endereço]. Tudo certo?</div></div>
+<h3 class="sub-h">Lembrete 2h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 2h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], tudo certo pra daqui a 2h? [Link/Endereço]. O/A [ADVOGADO(A)] já está com seu caso em mãos.</div></div>
+`},
+  7:{intro:"Consulta ágil e acolhedora.",
+     parts:["Abertura","Escuta","Análise","Fechamento"],
+     body:`
+<h3 class="sub-h">Abertura (2-3 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], muito prazer, sou o/a [ADVOGADO(A)]. Parabéns pela chegada do bebê! Vou te explicar de forma rápida e clara se você tem direito e como funciona. Me conta sua situação.</div></div>
+<h3 class="sub-h">Escuta (5-7 min)</h3>
+<ul class="blist"><li>Gestante ou já nasceu? Há quanto tempo?</li><li>Como trabalha hoje (CLT, MEI, rural, desempregada)?</li><li>Quando contribuiu pela última vez?</li><li>Já tentou no INSS?</li></ul>
+<h3 class="sub-h">Análise técnica (12-15 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o salário-maternidade não é só pra carteira assinada. Desempregada dentro do período de graça, MEI, autônoma e rural também podem receber. No seu caso: [enquadrar - tipo de segurada + tempo]. Pontos a favor: [X]. Caminho: [administrativo / judicial]. E o prazo importa, então vale agir logo.</div></div>
+<h3 class="sub-h">Fechamento (5-7 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o escritório trabalha assim: [HONORÁRIOS] / [incluso]. Não posso garantir resultado - quem decide é o INSS ou a Justiça. Mas garanto trabalho sério e ágil, que é o que seu caso pede. Quer começar?</div></div>
+`},
+  8:{intro:"Objeções da gestante/mãe.",
+     parts:["Não tenho carteira","Já fui negada","É demorado","Sem dinheiro","Vou pensar"],
+     body:`
+<h3 class="sub-h">"Não tenho carteira assinada, tenho direito?"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · sem CLT</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], esse é o maior mito do salário-maternidade. Desempregada (no período de graça), MEI, autônoma e trabalhadora rural também podem ter direito. Por isso vale a análise - muita gente deixa de receber só por não saber.</div></div>
+<h3 class="sub-h">"Já fui negada"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · negativa</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], negativa não é o fim. Muitos casos são revertidos, principalmente quando o INSS não reconheceu sua qualidade de segurada. Vale entender o motivo - e rápido, porque tem prazo.</div></div>
+<h3 class="sub-h">"É muito demorado?"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · prazo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], depende do caminho, mas justamente por isso a gente age rápido. Quanto antes começar, antes anda. Vale não deixar o prazo passar.</div></div>
+<h3 class="sub-h">"Não tenho dinheiro pra advogado"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · custo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], entendo - com bebê chegando tudo aperta. Por isso o escritório trabalha com formas que cabem na sua situação. A análise inicial já te mostra se vale. Quer fazer?</div></div>
+<h3 class="sub-h">"Vou pensar"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · pensar</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Claro, [NOME]. Só não deixa muito tempo, porque o salário-maternidade tem prazo. Qualquer dúvida, me chama. Tô aqui.</div></div>
+`},
+  9:{intro:"O que medir.",
+     parts:["Funil","Qualidade"],
+     body:`
+<table><thead><tr><th>Métrica</th><th>Meta</th><th>Alerta</th></tr></thead><tbody>
+<tr><td>Resposta inicial</td><td>&gt; 80%</td><td>&lt; 65%</td></tr>
+<tr><td>Qualificação completa</td><td>&gt; 55%</td><td>&lt; 40%</td></tr>
+<tr><td>Agendamento</td><td>&gt; 50%</td><td>&lt; 35%</td></tr>
+<tr><td>Comparecimento</td><td>&gt; 75%</td><td>&lt; 60%</td></tr>
+<tr><td>Fechamento (D+30)</td><td>&gt; 55%</td><td>&lt; 38%</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Atenção</div><p>Tempo de resposta é crítico aqui — a lead tem pressa e decide rápido. Responder em minutos converte muito mais que em horas.</p></div>
+`},
+  10:{intro:"Consulta rápida.",
+     parts:["Caso forte","Documentos","Frases-âncora"],
+     body:`
+<h3 class="sub-h">Sinais de caso forte</h3>
+<ul class="blist"><li>CLT ativa, ou contribuindo recentemente</li><li>Desempregada dentro do período de graça</li><li>Parto recente ou gestação avançada</li><li>Tem CNIS / comprovantes de contribuição</li></ul>
+<h3 class="sub-h">Documentos</h3>
+<ol class="blist"><li>RG e CPF</li><li>Carteira de trabalho / CNIS</li><li>Certidão de nascimento ou comprovante de gravidez</li><li>Comprovantes de contribuição (MEI/autônoma/rural)</li><li>Negativa do INSS (se houve)</li></ol>
+<h3 class="sub-h">Frases-âncora</h3>
+<div class="dual"><div class="dcard ok"><div class="dcard-h">Pode falar</div><ul><li>"Não é só pra quem tem carteira assinada"</li><li>"Desempregada, MEI e rural também podem"</li><li>"O prazo corre, vale agir logo"</li></ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca falar</div><ul><li>"Você vai receber R$ X"</li><li>"Garanto a aprovação"</li><li>Valor de honorário em público</li></ul></div></div>
+`},
+  11:{intro:"Termos traduzidos.",
+     parts:["A-Z"],
+     body:`
+<table><thead><tr><th style="width:32%">Termo</th><th>O que é</th></tr></thead><tbody>
+<tr><td>Salário-maternidade</td><td>Benefício pago à mãe (inclusive adotante) por 120 dias, em regra, no nascimento/adoção.</td></tr>
+<tr><td>Período de graça</td><td>Tempo em que a desempregada mantém a qualidade de segurada mesmo sem contribuir. Permite receber.</td></tr>
+<tr><td>Qualidade de segurada</td><td>Condição de estar "coberta" pelo INSS. Requisito central do benefício.</td></tr>
+<tr><td>Carência</td><td>Número mínimo de contribuições exigido (varia conforme o tipo de segurada).</td></tr>
+<tr><td>Segurada especial</td><td>Trabalhadora rural em regime familiar. Pode receber comprovando a atividade rural.</td></tr>
+</tbody></table>
+`},
+ },
+ cad:{
+  principal:{
+   d0:["Olá! Aqui é a [SECRETÁRIA], do escritório Ristori, especialista em salário-maternidade. Você chegou pra saber sobre o benefício, certo? Um detalhe: mesmo desempregada, MEI ou rural pode ter direito. Posso te fazer umas perguntas rápidas?",
+       "Oi [NOME]! Aqui é a [SECRETÁRIA], do escritório Ristori. Vi que você quer saber sobre o salário-maternidade. Antes de tudo: muita gente acha que não tem direito e tem. Posso te fazer umas perguntas rápidas pra entender seu caso?"],
+   d0b:"[NOME], como o salário-maternidade tem prazo, vale a gente conversar logo. Consigo te reservar um horário com o/a [ADVOGADO(A)]. Tem [DIA] às [HORÁRIO]?",
+   d1:["Oi [NOME], passando pra te ajudar a descobrir se você tem direito ao salário-maternidade. Quando puder responder, é rapidinho. E lembrando: o prazo corre, então vale não deixar pra depois.",
+       "[NOME], oi! Sei que com bebê (ou a caminho) a correria é grande. Quando tiver um minutinho, me responde aqui que eu te explico rapidinho sobre o salário-maternidade. Não deixa o prazo passar, tá?"],
+   d2_atendeu:"[Ligação] Oi [NOME], aqui é a [SECRETÁRIA] do Ristori. Tô te ligando pra te explicar rapidinho sobre o salário-maternidade e ver se você se encaixa. Tem um minutinho?",
+   d2_naoatendeu:"Oi [NOME], tentei te ligar agora sobre o salário-maternidade, mas não consegui. Quando puder, me avisa o melhor horário que eu te ligo. Ou, se preferir, a gente resolve por aqui mesmo. Só não deixa o prazo passar!",
+   d4:"[Áudio] Oi [NOME], é a [SECRETÁRIA]. Gravei rapidinho porque é importante: muita mãe deixa de receber o salário-maternidade só por achar que não tem direito. Eu não queria que isso acontecesse com você. Me chama quando puder?",
+   d6_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori de novo. Passando pra ver se consigo te ajudar com o salário-maternidade antes que o prazo aperte. Posso te explicar?",
+   d6_naoatendeu:"[NOME], tentei te ligar de novo. Não quero insistir demais, só não queria que você perdesse o prazo do salário-maternidade. Quando puder, me chama aqui.",
+   d9:["[NOME], reforçando uma coisa importante: o salário-maternidade tem prazo pra ser pedido. Se você quiser, eu já te ajudo a dar o primeiro passo hoje mesmo. Tô aqui.",
+       "[NOME], um lembrete com carinho: o salário-maternidade é um direito seu, mas tem um prazo. Seria uma pena deixar passar. Se quiser, a gente resolve isso juntas, no seu tempo. Me chama."],
+   d14_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Última vez que ligo pra não insistir. Só queria garantir que você não vai perder o direito ao salário-maternidade por causa do prazo.",
+   d14_naoatendeu:"[NOME], tentei falar com você algumas vezes. Vou parar de ligar. Mas fica o aviso com carinho: o salário-maternidade tem prazo. Quando quiser, é só me chamar aqui que eu te ajudo rápido.",
+   d21:["[NOME], encerrando por aqui. Se ainda quiser verificar seu direito ao salário-maternidade, me manda mensagem. Vou adorar te ajudar.",
+       "[NOME], vou te deixar à vontade. Mas se em algum momento quiser confirmar seu direito ao salário-maternidade, é só chamar aqui. Desejo tudo de bom pra você e o bebê!"],
+   d40:"Oi [NOME], tudo bem? E o bebê? Passando pra saber como vocês estão. Se ainda fizer sentido falar sobre o salário-maternidade (em alguns casos ainda dá tempo), estou à disposição."
+  },
+  faltou:{
+   f1:"[NOME], você tinha uma conversa marcada com o/a [ADVOGADO(A)] sobre o salário-maternidade e não conseguiu vir. Tá tudo bem com você e o bebê? Quer que eu remarque?",
+   f2_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori. Vi que não deu pra vir. Sem problema! Vamos remarcar? Como tem prazo, melhor não deixar pra muito depois.",
+   f2_naoatendeu:"[NOME], tentei te ligar pra remarcar nossa conversa do salário-maternidade. Me diz dois horários bons que eu encaixo - e quanto antes melhor, por causa do prazo.",
+   f3:"[NOME], quando quiser remarcar, é só dizer. Só lembrando com carinho que o benefício tem prazo. O/A [ADVOGADO(A)] está à disposição."
+  },
+  naofechou:{
+   n1:"[Áudio - advogado(a)] Oi [NOME], aqui é o/a [ADVOGADO(A)]. Foi ótimo conversar com você. Qualquer dúvida sobre o salário-maternidade, me manda mensagem. Tô à disposição.",
+   n2:"[NOME], passando pra saber se ficou alguma dúvida sobre o que conversamos. Posso esclarecer qualquer coisa.",
+   n3_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Queria saber se ficou alguma dúvida sobre o salário-maternidade ou se tem algo te segurando. E lembrando do prazo, viu? Posso ajudar?",
+   n3_naoatendeu:"[NOME], tentei te ligar. Se ficou qualquer dúvida sobre o salário-maternidade - valores, prazos, como funciona - me chama que eu esclareço, ou peço pro/pra [ADVOGADO(A)] te ligar.",
+   n4:"[NOME], só reforçando: o salário-maternidade é um direito seu e tem prazo. Se ainda fizer sentido, estou aqui pra dar o primeiro passo com você.",
+   n5:"Oi [NOME], tudo bem? Se ainda quiser seguir com o salário-maternidade e ainda houver prazo, é só me dizer. Tô à disposição."
+  }
+ }
+},
+
+/* =======================================================================
+   TESE 3 — AUXÍLIO-DOENÇA
+   ======================================================================= */
+auxilio:{
+ nome:"Auxílio-Doença",
+ tagline:"Incapacidade Temporária",
+ desc:"Trabalhador afastado por doença ou acidente. Inclui quem teve o benefício negado, cortado ou recebeu alta indevida e ainda está incapaz.",
+ chips:["Afastado","Negado / cortado","Alta indevida"],
+ conteudo:{
+  1:{intro:"O público são trabalhadores incapacitados temporariamente por doença ou acidente. Muitos chegam revoltados por negativa, corte ou alta indevida do INSS, e fragilizados (estão doentes e sem renda).",
+     parts:["Quem é a lead","Estado emocional","Tom obrigatório","O que vende"],
+     body:`
+<h3 class="sub-h">Quem é a Lead</h3>
+<ul class="blist">
+<li>Trabalhador (CLT, autônomo, MEI, contribuinte) <b>incapaz de trabalhar temporariamente</b> por doença ou acidente.</li>
+<li>Muitos chegam após <b>negativa</b>, <b>corte</b> do benefício ou <b>alta indevida</b> (cessou mas ainda está doente).</li>
+<li>Está sem renda e adoecido — situação de aperto e urgência.</li>
+</ul>
+<h3 class="sub-h">Estado Emocional</h3>
+<ul class="blist">
+<li><b>Revolta</b> com o INSS (sente injustiça da negativa/corte).</li>
+<li><b>Medo</b> — sem trabalhar e sem benefício, como pagar as contas?</li>
+<li><b>Fragilidade física e emocional</b> (está doente).</li>
+</ul>
+<h3 class="sub-h">Tom Obrigatório</h3>
+<div class="dual">
+<div class="dcard ok"><div class="dcard-h">Pode usar</div><ul>
+<li>Acolher a revolta sem dramatizar ("entendo, é injusto mesmo")</li>
+<li>Ser direto e prático — ele quer solução</li>
+<li>Validar que negativa/corte/alta podem ser contestados</li>
+<li>Agilidade (sem renda, tem urgência)</li>
+</ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca usar</div><ul>
+<li>Prometer reversão ou valor</li>
+<li>Frieza burocrática com quem está doente</li>
+<li>Juridiquês (perícia, DCB, cessação sem explicar)</li>
+<li>Demora</li>
+</ul></div>
+</div>
+<h3 class="sub-h">O que Vende</h3>
+<div class="callout"><div class="callout-l">O que vende</div><p><b>Acolher a injustiça + caminho concreto.</b> Esse público chega revoltado e sem renda. Quem reconhece a situação e mostra que dá pra contestar a negativa/corte, com agilidade, fecha.</p></div>
+`},
+  2:{intro:"Primeira mensagem que acolhe a situação (afastado/negado) e mostra que há caminho.",
+     parts:["Mensagem de recepção","Por que funciona"],
+     body:`
+<h3 class="sub-h">Mensagem de Recepção</h3>
+<div class="script"><div class="script-head"><span class="script-label">Recepção</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div>
+<div class="script-text">Olá! Aqui é a [SECRETÁRIA], da equipe do escritório Ristori, especialista em auxílio-doença.
+
+Você chegou por causa de um afastamento por doença ou acidente, certo? Seja porque precisa dar entrada, ou porque o INSS negou, cortou ou te deu alta cedo demais.
+
+Posso te fazer algumas perguntas rápidas pra entender seu caso e ver o que dá pra fazer?</div><div class="bubbles"></div>
+<div class="script-why"><b>Por quê:</b> nomeia as 3 dores (negou/cortou/alta) já na recepção — a pessoa se reconhece e sente que está no lugar certo.</div></div>
+`},
+  3:{intro:"Cinco perguntas que mapeiam a situação do benefício e a urgência.",
+     parts:["P1 a P5","Resposta por cenário"],
+     body:`
+<h3 class="sub-h">P1 — Nome</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P1</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Primeiro, qual o seu nome?</div></div>
+<h3 class="sub-h">P2 — A doença/situação</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P2</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Me conta: qual o problema de saúde que te impede de trabalhar hoje? E há quanto tempo você está nessa situação?</div></div>
+<h3 class="sub-h">P3 — Situação do benefício (a chave)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P3 · chave</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">E com o INSS, hoje você está:
+
+- Ainda não dei entrada
+- Dei entrada e estou esperando
+- Foi negado
+- Recebia e cortaram
+- Me deram alta, mas ainda não consigo trabalhar</div>
+<div class="script-why"><b>Por quê:</b> define a urgência e o caminho. Negado/cortado/alta indevida = casos quentes com prazo.</div></div>
+<h3 class="sub-h">P4 — Trabalho e contribuição</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P4</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você trabalha como carteira assinada, autônomo, MEI? E está contribuindo ou contribuiu recentemente pro INSS?</div></div>
+<h3 class="sub-h">P5 — Documentos médicos</h3>
+<div class="script"><div class="script-head"><span class="script-label">Qualificação · P5</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Você tem laudos, atestados ou exames médicos que mostram que está incapaz de trabalhar?</div>
+<div class="script-why"><b>Por quê:</b> a prova médica é o coração do caso de auxílio-doença.</div></div>
+
+<h3 class="sub-h">Resposta por Cenário</h3>
+<span class="s-tag s-tag-ok">Caso forte</span>
+<div class="script"><div class="script-head"><span class="script-label">Incapaz, com documentos, contribuindo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], pelo que me contou, seu caso tem bons elementos. O/A [ADVOGADO(A)] analisa os laudos e te explica o caminho. Posso agendar [DIA] às [HORÁRIO]?</div></div>
+<span class="s-tag s-tag-red">Caso quente</span>
+<div class="script"><div class="script-head"><span class="script-label">Negado / cortado / alta indevida</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], casos de negativa, corte ou alta indevida têm prazo pra contestar e muitos são revertidos. Vou priorizar seu agendamento. Consegue ainda essa semana? Tem [DIA] às [HORÁRIO]. E separa todos os seus laudos e exames, tá?</div>
+<div class="script-why"><b>Por quê:</b> urgência real (prazo) + ação concreta (separar laudos) dão sensação de que algo está sendo feito.</div></div>
+<span class="s-tag s-tag-amber">Ainda não deu entrada</span>
+<div class="script"><div class="script-head"><span class="script-label">Não pediu ainda</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], dar entrada do jeito certo, com a documentação médica bem organizada, aumenta muito a chance de dar certo de primeira. O/A [ADVOGADO(A)] te orienta nisso. Quer agendar?</div></div>
+`},
+  4:{intro:"Os cenários do auxílio-doença — resumo de bolso.",
+     parts:["Forte","Quente","Não pediu"],
+     body:`
+<table><thead><tr><th>Cenário</th><th>Sinal</th><th>Conduta</th></tr></thead><tbody>
+<tr><td>Forte</td><td>Incapaz, com laudos, contribuindo</td><td>Agendar, tom de confiança</td></tr>
+<tr><td>Quente</td><td>Negado / cortado / alta indevida</td><td>Priorizar (prazo!), pedir laudos</td></tr>
+<tr><td>Não pediu</td><td>Ainda vai dar entrada</td><td>Orientar a entrada bem feita</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Regra de ouro</div><p>Negativa, corte e alta indevida <b>têm prazo pra contestar</b> — são os casos mais quentes. Sempre pedir os <b>laudos médicos</b>, que são o coração da prova.</p></div>
+`},
+  6:{intro:"Agendamento com foco na documentação médica.",
+     parts:["Confirmação","Lembrete 24h","Lembrete 2h"],
+     body:`
+<h3 class="sub-h">Confirmação</h3>
+<div class="script"><div class="script-head"><span class="script-label">Agendamento</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], agendado.
+
+Data: [DIA E HORA]
+Com: [ADVOGADO(A)] - Especialista em Auxílio-Doença
+Formato: [Presencial / Online]
+
+Se tiver em mãos, ajuda muito:
+- RG e CPF
+- Todos os laudos, atestados e exames médicos
+- Carteira de trabalho ou CNIS
+- Comprovantes de contribuição (se autônomo/MEI)
+- Carta de negativa ou comunicado de alta do INSS (se houver)
+
+Quanto mais documento médico, melhor. Se faltar algo, a gente orienta. Posso confirmar?</div><div class="bubbles"></div></div>
+<h3 class="sub-h">Lembrete 24h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 24h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], confirmando nossa conversa de amanhã, [DIA] às [HORÁRIO], com o/a [ADVOGADO(A)]. Não esquece de separar os laudos! [Link/Endereço]. Tudo certo?</div></div>
+<h3 class="sub-h">Lembrete 2h</h3>
+<div class="script"><div class="script-head"><span class="script-label">Lembrete · 2h</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], tudo certo pra daqui a 2h? [Link/Endereço]. O/A [ADVOGADO(A)] já está com seu caso em mãos.</div></div>
+`},
+  7:{intro:"Consulta direta e acolhedora.",
+     parts:["Abertura","Escuta","Análise","Fechamento"],
+     body:`
+<h3 class="sub-h">Abertura (2-3 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], muito prazer, sou o/a [ADVOGADO(A)]. Sei que não é fácil estar doente e ainda ter que brigar pelo benefício. Vou te explicar de forma direta o que dá pra fazer. Me conta o que está acontecendo.</div></div>
+<h3 class="sub-h">Escuta (5-7 min)</h3>
+<ul class="blist"><li>Qual a doença e há quanto tempo?</li><li>Está conseguindo trabalhar ou não?</li><li>O que o INSS fez (negou/cortou/alta)?</li><li>Quais documentos médicos você tem?</li></ul>
+<h3 class="sub-h">Análise técnica (12-15 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o auxílio-doença (auxílio por incapacidade temporária) é pra quem está temporariamente incapaz de trabalhar e tem qualidade de segurado. O ponto central é a prova médica da incapacidade. No seu caso: [enquadrar - situação + documentos]. Como o INSS [negou/cortou/deu alta], o caminho é [recurso administrativo / ação judicial], e há prazo. Pontos a favor: [X]. Precisamos reforçar: [Y].</div></div>
+<h3 class="sub-h">Fechamento (5-7 min)</h3>
+<div class="script"><div class="script-head"><span class="script-label">Advogado(a)</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], o escritório trabalha assim: [HONORÁRIOS] / [incluso]. Não posso garantir resultado - quem decide é o INSS ou a Justiça, e depende da perícia. Mas garanto trabalho sério e ágil. Quer começar?</div></div>
+`},
+  8:{intro:"Objeções de quem está afastado.",
+     parts:["INSS negou","Não tenho laudo forte","É demorado","Sem dinheiro","Vou pensar"],
+     body:`
+<h3 class="sub-h">"O INSS já negou, não adianta"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · negativa</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], a maioria dos casos que viram ação teve negativa antes - e boa parte é revertida, principalmente quando a perícia do INSS não considerou todos os seus documentos. Vale analisar o motivo antes de desistir. E tem prazo.</div></div>
+<h3 class="sub-h">"Acho que meu laudo não é suficiente"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · prova</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], é justamente isso que o/a [ADVOGADO(A)] analisa - muitas vezes a pessoa tem mais prova do que imagina, e dá pra orientar quais documentos buscar pra fortalecer. Não dá pra saber sem analisar. Vale a conversa.</div></div>
+<h3 class="sub-h">"É muito demorado?"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · prazo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], depende do caminho, mas em casos urgentes dá pra pedir antecipação. E quanto antes começar, antes anda. Justamente por isso a gente age rápido.</div></div>
+<h3 class="sub-h">"Não tenho dinheiro pra advogado"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · custo</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">[NOME], entendo - sem trabalhar e sem benefício, tá apertado. Por isso o escritório trabalha com formas que cabem na sua situação. A análise inicial já te mostra se vale. Quer fazer?</div></div>
+<h3 class="sub-h">"Vou pensar"</h3>
+<div class="script"><div class="script-head"><span class="script-label">Objeção · pensar</span><div class="script-actions"><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">Claro, [NOME]. Só não deixa muito tempo se tiver prazo de recurso correndo. Qualquer dúvida, me chama. Tô aqui.</div></div>
+`},
+  9:{intro:"O que medir.",
+     parts:["Funil","Qualidade"],
+     body:`
+<table><thead><tr><th>Métrica</th><th>Meta</th><th>Alerta</th></tr></thead><tbody>
+<tr><td>Resposta inicial</td><td>&gt; 78%</td><td>&lt; 62%</td></tr>
+<tr><td>Qualificação completa</td><td>&gt; 55%</td><td>&lt; 40%</td></tr>
+<tr><td>Agendamento</td><td>&gt; 48%</td><td>&lt; 32%</td></tr>
+<tr><td>Comparecimento</td><td>&gt; 72%</td><td>&lt; 58%</td></tr>
+<tr><td>Fechamento (D+30)</td><td>&gt; 52%</td><td>&lt; 36%</td></tr>
+</tbody></table>
+<div class="callout"><div class="callout-l">Atenção</div><p>Casos de corte e alta indevida têm <b>prazo curto</b> de recurso — devem ser atendidos no mesmo dia sempre que possível.</p></div>
+`},
+  10:{intro:"Consulta rápida.",
+     parts:["Caso forte","Documentos","Frases-âncora"],
+     body:`
+<h3 class="sub-h">Sinais de caso forte</h3>
+<ul class="blist"><li>Incapacidade clara, com laudos recentes</li><li>Qualidade de segurado mantida (contribuindo ou no período de graça)</li><li>Negativa/corte/alta recente (prazo aberto)</li><li>Doença que claramente impede o trabalho</li></ul>
+<h3 class="sub-h">Documentos</h3>
+<ol class="blist"><li>Laudos, atestados e exames (o mais importante)</li><li>RG e CPF</li><li>CNIS / carteira de trabalho</li><li>Comprovantes de contribuição</li><li>Carta de negativa ou alta do INSS</li></ol>
+<h3 class="sub-h">Frases-âncora</h3>
+<div class="dual"><div class="dcard ok"><div class="dcard-h">Pode falar</div><ul><li>"Negativa não é o fim - muitos casos são revertidos"</li><li>"Alta indevida pode ser contestada"</li><li>"Quanto mais laudo, melhor"</li></ul></div>
+<div class="dcard no"><div class="dcard-h">Nunca falar</div><ul><li>"Vou conseguir reverter"</li><li>"Você vai voltar a receber" (garantia)</li><li>Valor de honorário em público</li></ul></div></div>
+`},
+  11:{intro:"Termos traduzidos.",
+     parts:["A-Z"],
+     body:`
+<table><thead><tr><th style="width:34%">Termo</th><th>O que é</th></tr></thead><tbody>
+<tr><td>Auxílio-doença</td><td>Hoje "auxílio por incapacidade temporária". Pago enquanto a pessoa está incapaz de trabalhar.</td></tr>
+<tr><td>Perícia médica</td><td>Avaliação do INSS (ou da Justiça) que decide se há incapacidade. Ponto central do caso.</td></tr>
+<tr><td>Alta indevida</td><td>Quando o INSS encerra o benefício mas a pessoa ainda está incapaz. Pode ser contestada.</td></tr>
+<tr><td>DCB</td><td>Data de Cessação do Benefício — quando o INSS marca o fim. Atenção ao prazo de recurso.</td></tr>
+<tr><td>Qualidade de segurado</td><td>Estar coberto pelo INSS. Requisito para receber.</td></tr>
+<tr><td>Período de graça</td><td>Tempo em que o segurado mantém a cobertura mesmo sem contribuir.</td></tr>
+</tbody></table>
+`},
+ },
+ cad:{
+  principal:{
+   d0:["Olá! Aqui é a [SECRETÁRIA], do escritório Ristori, especialista em auxílio-doença. Você chegou por causa de um afastamento por doença ou acidente, certo? Seja pra dar entrada ou porque o INSS negou, cortou ou deu alta cedo demais. Posso te fazer umas perguntas rápidas?",
+       "Oi [NOME], aqui é a [SECRETÁRIA], do escritório Ristori. Vi que você procurou sobre o auxílio-doença. Imagino que não esteja sendo fácil. Posso te fazer umas perguntas rápidas pra entender sua situação e ver o que dá pra fazer?"],
+   d0b:"[NOME], como casos de auxílio-doença costumam ter prazo, vale a gente conversar logo. Consigo reservar um horário com o/a [ADVOGADO(A)]. Tem [DIA] às [HORÁRIO]?",
+   d1:["Oi [NOME], passando pra te ajudar com o auxílio-doença. Quando puder responder, é rapidinho. Se o INSS negou ou cortou, lembra que tem prazo pra contestar - vale não deixar pra depois.",
+       "[NOME], oi! Continuo à disposição pra te ajudar com o auxílio-doença. Sei que estar afastado e sem renda é difícil, e é justamente por isso que vale agir logo. Quando puder, me responde."],
+   d2_atendeu:"[Ligação] Oi [NOME], aqui é a [SECRETÁRIA] do Ristori. Tô te ligando pra entender seu caso de auxílio-doença e ver o que dá pra fazer. Tem um minutinho?",
+   d2_naoatendeu:"Oi [NOME], tentei te ligar agora sobre o seu auxílio-doença, mas não consegui. Quando puder, me avisa o melhor horário que eu retorno. Ou a gente resolve por aqui. Se houver prazo de recurso, melhor não demorar.",
+   d4:"[Áudio] Oi [NOME], é a [SECRETÁRIA]. Gravei rapidinho: sei que tá difícil estar doente e ainda brigar pelo benefício. Mas muita negativa e corte do INSS são revertidos. Eu queria te ajudar com isso. Me chama quando puder.",
+   d6_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori. Passando de novo pra ver se consigo te ajudar com o auxílio-doença antes que o prazo aperte. Posso te explicar?",
+   d6_naoatendeu:"[NOME], tentei te ligar de novo. Não quero incomodar, só não queria que você perdesse o prazo de contestar o INSS. Quando puder, me chama aqui.",
+   d9:["[NOME], um detalhe importante: se o INSS negou, cortou ou deu alta, o prazo pra contestar corre. Se você quiser, eu já te ajudo a organizar os laudos e dar o primeiro passo. Tô aqui.",
+       "[NOME], reforçando: a maioria das negativas e cortes do INSS pode ser contestada, mas tem prazo. Não deixa o tempo correr contra você. Se quiser, dou o primeiro passo com você hoje."],
+   d14_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Última vez que ligo pra não insistir. Só queria garantir que você não vai perder o prazo de recurso do seu benefício.",
+   d14_naoatendeu:"[NOME], tentei falar com você algumas vezes. Vou parar de ligar. Mas fica o aviso: o prazo pra contestar o INSS corre. Quando quiser, é só me chamar que eu te ajudo rápido.",
+   d21:["[NOME], encerrando por aqui. Se ainda quiser resolver seu auxílio-doença, me manda mensagem. Estou aqui pra ajudar.",
+       "[NOME], vou te deixar à vontade. Mas se quiser retomar a conversa sobre o auxílio-doença a qualquer momento, é só me chamar. Melhoras e cuide-se."],
+   d40:"Oi [NOME], tudo bem? Como está sua saúde? Passando pra saber como você está. Se ainda fizer sentido falar sobre o auxílio-doença, estou à disposição."
+  },
+  faltou:{
+   f1:"[NOME], você tinha uma conversa marcada com o/a [ADVOGADO(A)] sobre o auxílio-doença e não conseguiu vir. Tá tudo bem com sua saúde? Quer que eu remarque?",
+   f2_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA] do Ristori. Vi que não deu pra vir. Sem problema! Vamos remarcar? Se tiver prazo de recurso, melhor logo.",
+   f2_naoatendeu:"[NOME], tentei te ligar pra remarcar nossa conversa do auxílio-doença. Me diz dois horários bons que eu encaixo - e quanto antes melhor, por causa do prazo.",
+   f3:"[NOME], quando quiser remarcar, é só dizer. Lembrando que casos de negativa e corte têm prazo. O/A [ADVOGADO(A)] está à disposição."
+  },
+  naofechou:{
+   n1:"[Áudio - advogado(a)] Oi [NOME], aqui é o/a [ADVOGADO(A)]. Foi bom conversar com você. Qualquer dúvida sobre o auxílio-doença, me manda mensagem. Tô à disposição.",
+   n2:"[NOME], passando pra saber se ficou alguma dúvida sobre o que conversamos do seu auxílio-doença. Posso esclarecer qualquer coisa.",
+   n3_atendeu:"[Ligação] Oi [NOME], é a [SECRETÁRIA]. Queria saber se ficou alguma dúvida sobre o auxílio-doença ou se tem algo te segurando. E lembrando do prazo de recurso. Posso ajudar?",
+   n3_naoatendeu:"[NOME], tentei te ligar. Se ficou qualquer dúvida sobre o auxílio-doença - prazos, perícia, como funciona - me chama que eu esclareço, ou peço pro/pra [ADVOGADO(A)] te ligar.",
+   n4:"[NOME], só reforçando: se o INSS negou ou cortou, o prazo pra contestar corre. Se ainda fizer sentido, estou aqui pra dar o primeiro passo com você.",
+   n5:"Oi [NOME], tudo bem? Como está sua saúde? Se ainda quiser resolver o auxílio-doença, é só me dizer. A porta segue aberta."
+  }
+ }
+}
+
+};
+
+/* ============================================================
+   ENGINE — PLAYBOOK RISTORI
+   ============================================================ */
+let TESE_ATIVA=null, MOD_ATIVO=1, CAD_CENARIO='principal';
+const TKEYS=Object.keys(TESES);
+const CANAL_LABEL={escrito:"Escrito",ligacao:"Ligação",audio:"Áudio"};
+
+/* ---------- LOBBY ---------- */
+function buildLobby(){
+  const grid=document.getElementById('teseGrid');
+  grid.innerHTML=TKEYS.map((k,i)=>{
+    const t=TESES[k];
+    return `<div class="tese-card reveal" onclick="abrirTrilha('${k}')">
+      <div class="tnum">Tese ${String(i+1).padStart(2,'0')}</div>
+      <div class="tname">${t.nome}</div>
+      <div class="tdesc">${t.desc}</div>
+      <div class="tmeta">${t.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+      <div class="tgo">Abrir trilha <span class="arr">→</span></div>
+    </div>`;
+  }).join('');
+}
+
+function goLobby(){
+  TESE_ATIVA=null;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-lobby').classList.add('active');
+  document.getElementById('brandSub').textContent='Playbook Comercial';
+  window.scrollTo({top:0,behavior:'smooth'});
+  observeReveals();
+}
+
+function showGuia(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-guia').classList.add('active');
+  closeSearch();
+  window.scrollTo({top:0,behavior:'smooth'});
+  observeReveals();
+}
+
+function abrirTrilha(k){
+  TESE_ATIVA=k; MOD_ATIVO=1; CAD_CENARIO='principal';
+  const t=TESES[k];
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-trilha').classList.add('active');
+  document.getElementById('brandSub').textContent=t.nome;
+  document.getElementById('badgeTxt').innerHTML=`${t.nome}<small>${t.tagline}</small>`;
+  buildNav(); renderModulo(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- NAV ---------- */
+function buildNav(){
+  const nav=document.getElementById('pbNav');
+  nav.innerHTML=MODULOS.map(m=>`
+    <li class="pb-nav-item${m.n===MOD_ATIVO?' active':''}" onclick="renderModulo(${m.n})">
+      <span class="pb-nav-num">${String(m.n).padStart(2,'0')}</span>
+      <span class="pb-nav-text">${m.t}</span>
+      ${m.star?'<span class="pb-nav-star">★</span>':''}
+    </li>`).join('');
+  document.getElementById('progressBar').style.width=(MOD_ATIVO/MODULOS.length*100)+'%';
+  document.getElementById('progressCount').textContent=String(MOD_ATIVO).padStart(2,'0')+' / '+MODULOS.length;
+}
+
+/* ---------- RENDER MÓDULO ---------- */
+function renderModulo(n){
+  MOD_ATIVO=n;
+  const mod=MODULOS.find(m=>m.n===n);
+  const body=document.getElementById('pbBody');
+  body.classList.remove('pb-fade');void body.offsetWidth;body.classList.add('pb-fade');
+
+  if(n===5){ renderCadencia(); buildNav(); return; }
+
+  const data=TESES[TESE_ATIVA].conteudo[n];
+  body.innerHTML=`
+    <div class="pb-banner" data-num="${String(n).padStart(2,'0')}">
+      <div class="pb-part-tag">Módulo ${String(n).padStart(2,'0')} · ${mod.sec}</div>
+      <h1>${mod.t}</h1>
+      <p class="pb-intro">${data.intro}</p>
+    </div>
+    <div class="pb-card">${data.body}</div>
+    ${pagerHTML(n)}
+  `;
+  fillScripts(); bindCopy(); bindParts(); buildNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function pagerHTML(n){
+  const prev=n>1?MODULOS[n-2]:null, next=n<MODULOS.length?MODULOS[n]:null;
+  return `<div class="pager" style="display:flex;justify-content:space-between;gap:14px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)">
+    <button class="pager-btn" style="flex:1;max-width:320px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:left;color:var(--text);font-family:inherit;${prev?'':'opacity:.3;cursor:not-allowed'}" ${prev?`onclick="renderModulo(${prev.n})"`:'disabled'}>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--champ);margin-bottom:4px">← Anterior</div>
+      <div style="font-size:14.5px;font-weight:500">${prev?prev.t:'—'}</div></button>
+    <button class="pager-btn" style="flex:1;max-width:320px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;cursor:pointer;text-align:right;color:var(--text);font-family:inherit;${next?'':'opacity:.3;cursor:not-allowed'}" ${next?`onclick="renderModulo(${next.n})"`:'disabled'}>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--champ);margin-bottom:4px">Próximo →</div>
+      <div style="font-size:14.5px;font-weight:500">${next?next.t:'—'}</div></button>
+  </div>`;
+}
+
+/* ---------- CADÊNCIA (módulo 5, especial) ---------- */
+function renderCadencia(){
+  const body=document.getElementById('pbBody');
+  body.innerHTML=`
+    <div class="pb-banner" data-num="05">
+      <div class="pb-part-tag">Módulo 05 · Operação · ★ Núcleo</div>
+      <h1>Cronograma de Cadência</h1>
+      <p class="pb-intro">A régua de follow-up dia a dia, etapa por etapa, com o canal de cada toque. Toda ligação tem um caminho de resgate por escrito caso o lead não atenda. Selecione o cenário abaixo.</p>
+    </div>
+    <div class="cad-switch" id="cadSwitch">
+      ${Object.keys(RITMOS).map(c=>`<button class="cad-tab${c===CAD_CENARIO?' active':''}" onclick="setCenario('${c}')">${RITMOS[c].nome}</button>`).join('')}
+    </div>
+    <div class="cad-legend">
+      <div class="cad-leg"><span class="sw" style="background:var(--c-escrito)"></span>Escrito (WhatsApp)</div>
+      <div class="cad-leg"><span class="sw" style="background:var(--c-ligacao)"></span>Ligação</div>
+      <div class="cad-leg"><span class="sw" style="background:var(--c-audio)"></span>Áudio</div>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  `;
+  renderTimeline();
+}
+
+function setCenario(c){ CAD_CENARIO=c; renderCadencia(); }
+
+function renderTimeline(){
+  const ritmo=RITMOS[CAD_CENARIO];
+  const scripts=TESES[TESE_ATIVA].cad[CAD_CENARIO];
+  const tl=document.getElementById('timeline');
+  tl.innerHTML=ritmo.passos.map(p=>{
+    let bodyHTML='';
+    if(p.branch){
+      bodyHTML=`
+        <div class="tl-body">
+          <div class="tl-branch ok">
+            <div class="tl-branch-h"><span class="ic">✓</span>Se atendeu</div>
+            ${scriptMini(scripts[p.key+'_atendeu'],'Roteiro da ligação')}
+          </div>
+          <div class="tl-branch no">
+            <div class="tl-branch-h"><span class="ic">✕</span>Se não atendeu — resgate escrito imediato</div>
+            ${scriptMini(scripts[p.key+'_naoatendeu'],'WhatsApp de resgate')}
+          </div>
+        </div>`;
+    }else{
+      bodyHTML=`<div class="tl-body">${scriptMini(scripts[p.key],'Script')}</div>`;
+    }
+    return `<div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-top">
+          <div class="tl-day">${p.dia}</div>
+          <div class="tl-info"><div class="tl-toque">${p.toque}</div><div class="tl-obj">${p.obj}</div></div>
+          <span class="tl-canal ${p.canal}">${CANAL_LABEL[p.canal]}</span>
+        </div>
+        ${bodyHTML}
+      </div>
+    </div>`;
+  }).join('');
+  fillScripts(); bindCopy(); bindParts(); bindVars();
+}
+
+let _vid=0;
+function scriptMini(val,label){
+  // val pode ser string (1 versão) ou array (várias versões)
+  const arr = Array.isArray(val) ? val : [val||''];
+  const id = 'v'+(_vid++);
+  const first = esc(arr[0]);
+  const switcher = arr.length>1
+    ? `<div class="var-switch" data-vid="${id}">`+arr.map((_,i)=>`<button class="var-chip${i===0?' active':''}" data-vid="${id}" data-vi="${i}">Versão ${i+1}</button>`).join('')+`</div>`
+    : '';
+  const dataAttr = arr.length>1 ? ` data-variants="${encodeURIComponent(JSON.stringify(arr))}"` : '';
+  return `<div class="script" data-sid="${id}"${dataAttr}>${switcher}<div class="script-head"><span class="script-label">${label}</span><div class="script-actions"><button class="btn-sm parts-btn" data-text="">Em partes</button><button class="btn-sm copy-btn" data-text="">Copiar</button></div></div><div class="script-text">${first}</div><div class="bubbles"></div></div>`;
+}
+
+/* troca de variante */
+function bindVars(){
+  document.querySelectorAll('.var-chip').forEach(chip=>{
+    if(chip._b)return;chip._b=1;
+    chip.onclick=e=>{
+      e.stopPropagation();
+      const sc=chip.closest('.script');
+      const arr=JSON.parse(decodeURIComponent(sc.dataset.variants));
+      const i=+chip.dataset.vi;
+      sc.querySelector('.script-text').textContent=arr[i];
+      // reset data-text dos botões e fecha balões
+      sc.querySelectorAll('.copy-btn,.parts-btn').forEach(b=>b.dataset.text=arr[i]);
+      const box=sc.querySelector('.bubbles');if(box){box.classList.remove('show');box.innerHTML='';}
+      sc.querySelectorAll('.var-chip').forEach(c=>c.classList.toggle('active',c===chip));
+    };
+  });
+}
+
+/* ---------- preencher data-text dos botões ---------- */
+function fillScripts(){
+  document.querySelectorAll('.script').forEach(s=>{
+    const txt=s.querySelector('.script-text')?.textContent||'';
+    s.querySelectorAll('.copy-btn,.parts-btn').forEach(b=>{ if(!b.dataset.text) b.dataset.text=txt; });
+  });
+}
+
+/* ---------- COPY ---------- */
+async function doCopy(t){try{await navigator.clipboard.writeText(t);}catch(_){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
+let tt;function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1500);}
+function bindCopy(){document.querySelectorAll('.copy-btn').forEach(btn=>{if(btn._b)return;btn._b=1;btn.onclick=async e=>{e.stopPropagation();await doCopy(btn.dataset.text);const o=btn.textContent;btn.textContent='Copiado';btn.classList.add('done');showToast('Script copiado');setTimeout(()=>{btn.textContent=o;btn.classList.remove('done');},1300);};});}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ---------- BALÕEZINHOS ---------- */
+function splitParts(txt){let b=txt.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);const m=[];for(let i=0;i<b.length;i++){if(m.length&&b[i].length<26&&!b[i].includes('\n'))m[m.length-1]+='\n'+b[i];else m.push(b[i]);}return m;}
+function bindParts(){document.querySelectorAll('.parts-btn').forEach(btn=>{if(btn._b)return;btn._b=1;btn.onclick=e=>{e.stopPropagation();const sc=btn.closest('.script'),box=sc.querySelector('.bubbles');if(!box)return;if(box.classList.contains('show')){box.classList.remove('show');return;}const parts=splitParts(btn.dataset.text);box.innerHTML=`<span class="bubbles-hint">Envie um de cada vez — toque pra copiar</span>`+parts.map(p=>`<div class="bubble">${esc(p)}<button class="bcopy" data-text="${encodeURIComponent(p)}">Copiar</button></div>`).join('');box.classList.add('show');box.querySelectorAll('.bcopy').forEach(b=>{b.onclick=async ev=>{ev.stopPropagation();await doCopy(decodeURIComponent(b.dataset.text));b.textContent='Copiado';showToast('Balão copiado');setTimeout(()=>b.textContent='Copiar',1200);};});};});}
+
+/* ---------- BUSCA ---------- */
+let SEARCH_INDEX=[];
+function buildIndex(){
+  const idx=[];
+  TKEYS.forEach(k=>{
+    const t=TESES[k];
+    // módulos
+    Object.keys(t.conteudo).forEach(n=>{
+      const mod=MODULOS.find(m=>m.n===+n);
+      const tmp=document.createElement('div');tmp.innerHTML=t.conteudo[n].body;
+      tmp.querySelectorAll('.script').forEach(s=>{
+        idx.push({tese:k,teseNome:t.nome,mod:+n,modNome:mod.t,label:s.querySelector('.script-label')?.textContent||'',text:s.querySelector('.script-text')?.textContent||''});
+      });
+    });
+    // cadência
+    Object.keys(t.cad).forEach(cen=>{
+      Object.keys(t.cad[cen]).forEach(key=>{
+        const v=t.cad[cen][key];
+        const txt=Array.isArray(v)?v.join('  /  '):v;
+        idx.push({tese:k,teseNome:t.nome,mod:5,modNome:'Cadência · '+RITMOS[cen].nome,label:key,text:txt});
+      });
+    });
+  });
+  return idx;
+}
+function hl(t,q){const safe=esc(t.length>150?t.slice(0,150)+'…':t);return safe.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}
+function runSearch(q){
+  const r=document.getElementById('searchResults');q=q.trim();
+  if(q.length<2){r.innerHTML='<div class="search-empty">Digite ao menos 2 letras.</div>';return;}
+  const m=SEARCH_INDEX.filter(it=>(it.label+' '+it.text+' '+it.teseNome+' '+it.modNome).toLowerCase().includes(q.toLowerCase())).slice(0,40);
+  if(!m.length){r.innerHTML=`<div class="search-empty">Nada encontrado para "<b>${esc(q)}</b>".</div>`;return;}
+  r.innerHTML=m.map((it,i)=>`<div class="sr-item" data-i="${i}"><div class="sr-crumb">${esc(it.teseNome)} · ${esc(it.modNome)}</div><div class="sr-title">${esc(it.label)}</div><div class="sr-snippet">${hl(it.text,q)}</div></div>`).join('');
+  r.querySelectorAll('.sr-item').forEach((el,i)=>el.onclick=()=>{closeSearch();const it=m[i];abrirTrilha(it.tese);setTimeout(()=>renderModulo(it.mod),60);});
+}
+function openSearch(){document.getElementById('searchOv').classList.add('show');setTimeout(()=>document.getElementById('searchInput').focus(),50);}
+function closeSearch(){document.getElementById('searchOv').classList.remove('show');document.getElementById('searchInput').value='';}
+document.getElementById('searchInput').addEventListener('input',e=>runSearch(e.target.value));
+document.getElementById('searchOv').addEventListener('click',e=>{if(e.target.id==='searchOv')closeSearch();});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();}if(e.key==='Escape')closeSearch();});
+
+/* ---------- EXPORT PDF (trilha ativa inteira) ---------- */
+function exportPDF(){
+  if(!TESE_ATIVA){showToast('Abra uma tese primeiro');return;}
+  const t=TESES[TESE_ATIVA];
+  let html=`<div class="p-law">Ristori · Playbook Comercial</div><div class="p-sub">${t.nome} — ${t.tagline}</div>`;
+  // módulos 1-11
+  MODULOS.forEach(m=>{
+    html+=`<div class="p-mod">${String(m.n).padStart(2,'0')} · ${m.t}</div>`;
+    if(m.n===5){
+      Object.keys(RITMOS).forEach(cen=>{
+        html+=`<div class="p-sub2">${RITMOS[cen].nome}</div>`;
+        RITMOS[cen].passos.forEach(p=>{
+          html+=`<div class="p-cad"><div class="p-cad-h">${p.dia} · ${p.toque} · [${CANAL_LABEL[p.canal]}] — ${p.obj}</div>`;
+          const sc=t.cad[cen];
+          const pv=(v,lbl)=>{
+            if(Array.isArray(v)) return v.map((x,i)=>`<div class="p-script"><div class="p-script-l">${esc(lbl)} · Versão ${i+1}</div>${esc(x)}</div>`).join('');
+            return `<div class="p-script"><div class="p-script-l">${esc(lbl)}</div>${esc(v||'')}</div>`;
+          };
+          if(p.branch){
+            html+=pv(sc[p.key+'_atendeu'],'Se atendeu');
+            html+=pv(sc[p.key+'_naoatendeu'],'Se não atendeu (resgate escrito)');
+          }else{
+            html+=pv(sc[p.key],'Script');
+          }
+          html+=`</div>`;
+        });
+      });
+    }else{
+      const data=t.conteudo[m.n];
+      const tmp=document.createElement('div');tmp.innerHTML=data.body;
+      // títulos
+      tmp.querySelectorAll('.sub-h').forEach(h=>{const d=document.createElement('div');d.className='p-sub2';d.textContent=h.textContent;h.replaceWith(d);});
+      // scripts
+      tmp.querySelectorAll('.script').forEach(s=>{
+        const label=s.querySelector('.script-label')?.textContent||'';
+        const txt=s.querySelector('.script-text')?.textContent||'';
+        const d=document.createElement('div');d.className='p-script';
+        d.innerHTML=`<div class="p-script-l">${esc(label)}</div>${esc(txt)}`;
+        s.replaceWith(d);
+      });
+      // remover botões e balões
+      tmp.querySelectorAll('.script-actions,.bubbles,.pager').forEach(e=>e.remove());
+      // parágrafos
+      tmp.querySelectorAll('.text-p,.blist li,.callout p,.dcard li').forEach(p=>{p.classList.add('p-txt');});
+      html+=tmp.innerHTML;
+    }
+  });
+  const area=document.getElementById('printArea');
+  area.innerHTML=html;
+  showToast('Abrindo impressão...');
+  setTimeout(()=>window.print(),250);
+}
+
+/* ---------- reveal / scroll ---------- */
+const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+function observeReveals(){document.querySelectorAll('.reveal:not(.in)').forEach((el,i)=>{el.style.transitionDelay=(i%6*.05)+'s';io.observe(el);});}
+window.addEventListener('scroll',()=>{const h=document.documentElement;const sc=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;document.getElementById('scrollProg').style.width=sc+'%';document.getElementById('toTop').classList.toggle('show',h.scrollTop>500);});
+
+/* ---------- init ---------- */
+buildLobby();
+observeReveals();
+setTimeout(()=>{SEARCH_INDEX=buildIndex();},120);
+
+</script>
+</body>
+</html>
